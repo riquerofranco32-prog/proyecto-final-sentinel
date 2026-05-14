@@ -954,6 +954,10 @@
     font-size: 1rem;
   }
 
+  .scenario-grid--quad {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
   .hero-title .line2 {
     display: block;
     font-size: 0.42em;
@@ -980,8 +984,8 @@
     <a href="#mercado">Mercado</a>
     <a href="#localizacion">Ubicación</a>
     <a href="#ingenieria">Proceso</a>
+    <a href="#finanzas">Economía</a>
     <a href="#layout">Planta</a>
-    <a href="#economico">Economía</a>
     <a href="#conclusion">Cierre</a>
   </div>
 </nav>
@@ -1017,23 +1021,23 @@
   <div class="hero-kpis-secondary">
     <div class="kpi-card">
       <div class="kpi-value">970</div>
-      <div class="kpi-label">DRONES / AÑO</div>
+      <div class="kpi-label">DRONES / AÑO (CAP.)</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-value">USD 25M</div>
-      <div class="kpi-label">VAN ESPERADO (WACC 18%)</div>
+      <div class="kpi-value">20,80%</div>
+      <div class="kpi-label">WACC (CAPM ACTUALIZADO)</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-value">100%</div>
-      <div class="kpi-label">VIABILIDAD (10K ITER.)</div>
+      <div class="kpi-value">USD 8,87M</div>
+      <div class="kpi-label">VAN MÁX. (E2 · TOMADOR)</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-value">&lt; 3 años</div>
-      <div class="kpi-label">PAYBACK ESTIMADO</div>
+      <div class="kpi-value">2,52 a.</div>
+      <div class="kpi-label">PAYBACK MÍN. (E2 · TOMADOR)</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-value">55 u.</div>
-      <div class="kpi-label">PUNTO DE EQUILIBRIO</div>
+      <div class="kpi-value">163 u.</div>
+      <div class="kpi-label">PUNTO DE EQUILIBRIO / AÑO</div>
     </div>
   </div>
 </section>
@@ -1128,7 +1132,7 @@
     <div class="card">
       <span class="card-icon">📊</span>
       <h3>La Viabilidad</h3>
-      <p>VAN esperado de USD 25,13 M (Escenario Compra) bajo WACC del 18% y 10.000 iteraciones Monte Carlo. Probabilidad de VAN positivo: 100%. Payback en menos de 3 años.</p>
+      <p>Cuatro variantes de flujo (2 localizaciones × 2 estrategias de precio) con horizonte 10 años y tasa <strong>20,80%</strong> (CAPM + EMBI+ al 29/04/2026). VAN positivo en todos los casos; máximo <strong>USD 8.874.886</strong> (E2 · tomador de precio). Payback desde <strong>2,52 años</strong>. Punto de equilibrio operativo <strong>163 u/año</strong> (16,8% de capacidad).</p>
     </div>
     <div class="card">
       <span class="card-icon">🎯</span>
@@ -1405,7 +1409,7 @@
       <div style="font-size:2rem;margin-bottom:0.5rem;">🏷️</div>
       <div class="kpi-value" style="font-size:1.1rem;">Venta directa</div>
       <div class="kpi-label">Hardware VANT</div>
-      <p class="small mt-1">USD 17.700–35.000 por unidad. Consultiva B2B. Organismos, empresas forestales, petroleras.</p>
+      <p class="small mt-1">Benchmark competitivo con precio tomador <strong>USD 27.571/u</strong> (= media de mercado) y estrategia formadora <strong>USD 26.000/u</strong> (−5,7%). Consultiva B2B.</p>
     </div>
     <div class="kpi-card" style="text-align:center;">
       <div style="font-size:2rem;margin-bottom:0.5rem;">☁️</div>
@@ -1767,6 +1771,292 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════ -->
+<!-- 9b. ECONOMICS & FINANCIALS (fuente: Sentinel_Resumen_Actualizado.html) -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="finanzas">
+  <div class="sec-label">12 — Economics &amp; Financials</div>
+  <h2>Dashboard financiero actualizado</h2>
+  <p class="lede fade-in">Cifras y supuestos alineados al resumen ejecutivo actualizado (CAPEX detallado, CAPM / EMBI+ 29/04/2026, financiamiento BICE Comex, costos variables con BOM y estructura fija por escenario).</p>
+
+  <div class="pill-divider fade-in"><span>CAPEX — inversión inicial</span></div>
+  <div class="grid-2 fade-in mb-2">
+    <div class="scenario-card winner-risk">
+      <div class="scenario-title"><span class="tag tag-blue">E1</span> Compra Parque Industrial Maipú</div>
+      <div class="metric-row"><span class="metric-key">Total sin IVA</span><span class="metric-val">USD 4.334.880</span></div>
+      <div class="metric-row"><span class="metric-key">Total con IVA</span><span class="metric-val blue">USD 5.194.805</span></div>
+      <div class="metric-row"><span class="metric-key">Amortización anual</span><span class="metric-val">USD 307.038</span></div>
+    </div>
+    <div class="scenario-card winner">
+      <div class="scenario-title"><span class="tag tag-green">E2</span> Alquiler Nave Cumbra</div>
+      <div class="metric-row"><span class="metric-key">Total sin IVA</span><span class="metric-val">USD 3.617.635</span></div>
+      <div class="metric-row"><span class="metric-key">Total con IVA</span><span class="metric-val green">USD 4.376.918</span></div>
+      <div class="metric-row"><span class="metric-key">Amortización anual</span><span class="metric-val">USD 292.302</span></div>
+    </div>
+  </div>
+  <div class="grid-4 fade-in mb-2">
+    <div class="kpi-card"><div class="kpi-value">$1,89 M</div><div class="kpi-label">CONSTRUCCIÓN (E1)</div></div>
+    <div class="kpi-card"><div class="kpi-value">$1,28 M</div><div class="kpi-label">ADECUACIÓN (E2)</div></div>
+    <div class="kpi-card"><div class="kpi-value">$1,19 M</div><div class="kpi-label">MAQUINARIA Y EQUIPOS</div></div>
+    <div class="kpi-card"><div class="kpi-value">$250 K</div><div class="kpi-label">JAULA INDOOR (DESTACADO)</div></div>
+  </div>
+  <div class="table-wrap fade-in mb-2">
+    <table>
+      <thead>
+        <tr><th>Categoría</th><th class="td-right" style="text-align:right;">E1 — Compra (USD s/IVA)</th><th class="td-right" style="text-align:right;">E2 — Alquiler (USD s/IVA)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Terreno / Nave</td><td style="text-align:right;">$240.000</td><td style="text-align:right;">$2.000 (alquiler/mes)</td></tr>
+        <tr><td>2. Construcción (nave 800 m² + oficinas 500 m²)</td><td style="text-align:right;">$1.890.000</td><td style="text-align:right;">—</td></tr>
+        <tr><td>2b. Adecuación galpón (E2)</td><td style="text-align:right;">—</td><td style="text-align:right;">$1.281.100</td></tr>
+        <tr><td>3. Maquinaria y Equipos</td><td style="text-align:right;">$1.187.600</td><td style="text-align:right;">$1.187.600</td></tr>
+        <tr><td>4. Muebles y Útiles</td><td style="text-align:right;">$147.500</td><td style="text-align:right;">$147.500</td></tr>
+        <tr><td>5. Rodados</td><td style="text-align:right;">$190.000</td><td style="text-align:right;">$190.000</td></tr>
+        <tr><td>6. Puesta en Marcha</td><td style="text-align:right;">$178.140</td><td style="text-align:right;">$178.140</td></tr>
+        <tr style="font-weight:700;"><td>TOTAL INVERSIÓN</td><td style="text-align:right;">$4.334.880</td><td style="text-align:right;">$3.617.635</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="highlight-box fade-in mb-2">
+    <strong>Equipamiento destacado:</strong> 4 brazos robóticos colaborativos ($161.200), jaula de vuelo indoor ($250.000), sistema de calibración IMU/brújula ($30.000), colimador/banco óptico ($50.000), infraestructura de red ($100.000). Vida útil promedio ponderada: 7,69 años.
+  </div>
+
+  <div class="pill-divider fade-in"><span>Financiamiento</span></div>
+  <div class="two-col fade-in mb-2">
+    <div class="card">
+      <h3>E1 — Total USD 5.194.805 (con IVA)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Fuente</th><th style="text-align:right;">Monto (USD)</th><th style="text-align:right;">%</th></tr></thead>
+          <tbody>
+            <tr><td>Aportes propios</td><td style="text-align:right;">$2.597.402</td><td style="text-align:right;">50%</td></tr>
+            <tr><td>Préstamo BICE (Comex)</td><td style="text-align:right;">$2.597.402</td><td style="text-align:right;">50%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>E2 — Total USD 4.376.918 (con IVA)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Fuente</th><th style="text-align:right;">Monto (USD)</th><th style="text-align:right;">%</th></tr></thead>
+          <tbody>
+            <tr><td>Aportes propios</td><td style="text-align:right;">$3.063.843</td><td style="text-align:right;">70%</td></tr>
+            <tr><td>Préstamo BICE (Comex)</td><td style="text-align:right;">$1.313.075</td><td style="text-align:right;">30%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="highlight-box warn fade-in mb-2">
+    <strong>Condiciones del préstamo:</strong> Banco BICE · Línea Comex · TNA 8,5% en USD · Sistema alemán (cuota decreciente) · Plazo 7 años · 12 meses de gracia · TEM 0,71% · Cuota gracia USD 5.249/mes · Primera cuota amortización USD 15.518.
+  </div>
+
+  <div class="pill-divider fade-in"><span>OPEX — estructura de costos</span></div>
+  <div class="grid-4 fade-in mb-2">
+    <div class="kpi-card"><div class="kpi-value">23</div><div class="kpi-label">PUESTOS TOTALES</div></div>
+    <div class="kpi-card"><div class="kpi-value">$96.365</div><div class="kpi-label">COSTO RR.HH. / MES</div></div>
+    <div class="kpi-card"><div class="kpi-value">$1.203.114</div><div class="kpi-label">COSTO RR.HH. / AÑO</div></div>
+    <div class="kpi-card"><div class="kpi-value">$427.224</div><div class="kpi-label">M.O. DIRECTA / AÑO</div></div>
+  </div>
+  <div class="grid-2 fade-in mb-2">
+    <div class="card">
+      <h3>Costos variables (ambos escenarios)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ítem</th><th style="text-align:right;">USD/año</th></tr></thead>
+          <tbody>
+            <tr><td>BOM — materia prima (puesto en Arg.)</td><td style="text-align:right;">$15.972.402</td></tr>
+            <tr><td>Costo BOM unitario</td><td style="text-align:right;">$16.466/u</td></tr>
+            <tr><td>Mano de obra directa</td><td style="text-align:right;">$427.224</td></tr>
+            <tr style="font-weight:700;"><td>Total costo variable</td><td style="text-align:right;">$16.399.626</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small mt-1" style="color:var(--muted);">BOM incluye aranceles 13% + IVA 21%. Componentes críticos: controladora de vuelo ($3.080/u), sensores núcleo ($2.900/u), INS posicionamiento ($1.220/u), tanque spray ($1.400/u).</p>
+    </div>
+    <div class="card">
+      <h3>Costos fijos anuales por escenario</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ítem</th><th style="text-align:right;">E1 — Compra</th><th style="text-align:right;">E2 — Alquiler</th></tr></thead>
+          <tbody>
+            <tr><td>Amortizaciones</td><td style="text-align:right;">$307.038</td><td style="text-align:right;">$292.302</td></tr>
+            <tr><td>Sueldos indirectos</td><td style="text-align:right;">$729.150</td><td style="text-align:right;">$729.150</td></tr>
+            <tr><td>Intereses préstamo</td><td style="text-align:right;">$591.837</td><td style="text-align:right;">$235.416</td></tr>
+            <tr><td>Servicios + seguros + varios</td><td style="text-align:right;">$184.050</td><td style="text-align:right;">$173.490</td></tr>
+            <tr style="font-weight:700;"><td>Total CF anual</td><td style="text-align:right;">$1.812.074</td><td style="text-align:right;">$1.430.358</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small mt-1" style="color:var(--muted);">Servicios mensuales referencia: electricidad USD 3.466 · IT (fibra + cloud + licencias) USD 3.880 · gas USD 1.200 · agua USD 100. Consumo industrial: 700 kW/h × 30 días.</p>
+    </div>
+  </div>
+
+  <div class="pill-divider fade-in"><span>Precio, margen e ingreso por volumen</span></div>
+  <div class="grid-2 fade-in mb-2">
+    <div class="card">
+      <h3>Benchmark competitivo (USD)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Competidor</th><th style="text-align:right;">Precio</th></tr></thead>
+          <tbody>
+            <tr><td>XAG P1000</td><td style="text-align:right;">$32.000</td></tr>
+            <tr><td>DJI Matrice 4T</td><td style="text-align:right;">$25.000</td></tr>
+            <tr><td>Skydio X10</td><td style="text-align:right;">$19.000</td></tr>
+            <tr><td>Parrot Anafi USA</td><td style="text-align:right;">$25.000</td></tr>
+            <tr><td>Freefly Astro</td><td style="text-align:right;">$32.000</td></tr>
+            <tr><td>Elios 3</td><td style="text-align:right;">$30.000</td></tr>
+            <tr><td>Voliro T</td><td style="text-align:right;">$30.000</td></tr>
+            <tr style="font-weight:700;"><td>Media del mercado</td><td style="text-align:right;">$27.571</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Estrategias Sentinel vs costo unitario</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Indicador</th><th style="text-align:right;">Tomador</th><th style="text-align:right;">Formador</th></tr></thead>
+          <tbody>
+            <tr><td>Precio de venta (USD/u)</td><td style="text-align:right;">$27.571</td><td style="text-align:right;">$26.000</td></tr>
+            <tr><td>Costo unitario (USD/u)</td><td style="text-align:right;">$16.466</td><td style="text-align:right;">$16.466</td></tr>
+            <tr><td>Margen bruto (USD/u)</td><td style="text-align:right;">$11.105</td><td style="text-align:right;">$9.534</td></tr>
+            <tr><td>Ingreso anual 970 u</td><td style="text-align:right;">$26.744.286</td><td style="text-align:right;">$25.220.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small mt-1" style="color:var(--muted);">Tomador = media del mercado. Formador = −5,7% sobre la media.</p>
+    </div>
+  </div>
+
+  <div class="pill-divider fade-in"><span>UEN — lectura de ingresos y costos</span></div>
+  <div class="grid-3 fade-in mb-2">
+    <div class="card">
+      <span class="product-mini">UEN I · Planta</span>
+      <h3>Drones ensamblados</h3>
+      <p class="small">Ingreso volumétrico modelado a 970 u/año con precio tomador o formador; costo variable dominado por BOM ($16.466/u) más MOD ($427.224/año).</p>
+    </div>
+    <div class="card">
+      <span class="product-mini">UEN II · Servicios</span>
+      <h3>MRO · MaaS · capacitación</h3>
+      <p class="small">Estructura de personal incluye técnicos MRO, logística y operaciones; costos fijos incorporan servicios industriales y seguros según escenario.</p>
+    </div>
+    <div class="card">
+      <span class="product-mini">UEN III · Sentinel Cloud</span>
+      <h3>SaaS y datos</h3>
+      <p class="small">Roles GIS e IT en plantilla; rubros de IT en costos fijos (fibra, cloud, licencias). El modelo dual hardware + SaaS se explicita en el estudio como palanca de resiliencia.</p>
+    </div>
+  </div>
+
+  <div class="pill-divider fade-in"><span>WACC — CAPM 29/04/2026</span></div>
+  <div class="grid-4 fade-in mb-2">
+    <div class="kpi-card"><div class="kpi-value">4,39%</div><div class="kpi-label">Rf (T-Bond 10Y)</div></div>
+    <div class="kpi-card"><div class="kpi-value">12,02%</div><div class="kpi-label">Rm (S&amp;P500 1993–2024)</div></div>
+    <div class="kpi-card"><div class="kpi-value">1,40</div><div class="kpi-label">BETA SECTOR</div></div>
+    <div class="kpi-card"><div class="kpi-value">573 pb</div><div class="kpi-label">EMBI+ (JP Morgan)</div></div>
+  </div>
+  <div class="kpi-card fade-in mb-2" style="max-width:420px;">
+    <div class="kpi-value">20,80%</div>
+    <div class="kpi-label">WACC RESULTANTE (r = Rf + β(Rm−Rf) + Rp)</div>
+  </div>
+  <div class="highlight-box warn fade-in mb-2">
+    <strong>Nota metodológica:</strong> el WACC de <strong>20,80%</strong> reemplaza al 18% utilizado en versiones anteriores del documento base; todos los flujos del resumen actualizado se descuentan a esta tasa.
+  </div>
+
+  <div class="pill-divider fade-in"><span>Rentabilidad — punto de equilibrio (E1 · tomador)</span></div>
+  <div class="grid-4 fade-in mb-2">
+    <div class="kpi-card"><div class="kpi-value">$27.571</div><div class="kpi-label">PRECIO / U</div></div>
+    <div class="kpi-card"><div class="kpi-value">$16.466</div><div class="kpi-label">CV / U</div></div>
+    <div class="kpi-card"><div class="kpi-value">163 u</div><div class="kpi-label">PUNTO EQUILIBRIO / AÑO</div></div>
+    <div class="kpi-card"><div class="kpi-value">16,8%</div><div class="kpi-label">% CAPACIDAD</div></div>
+  </div>
+  <div class="highlight-box success fade-in mb-2">
+    Con <strong>163 unidades/año</strong> (16,8% de la capacidad de 970 u) el proyecto cubre costos. Margen de seguridad <strong>83,2%</strong>. A producción plena de 970 u/año el resultado operativo anual supera los <strong>USD 7,9 millones</strong> (según resumen).
+  </div>
+
+  <div class="pill-divider fade-in"><span>Flujo de caja — 10 años · r = 20,80%</span></div>
+  <div class="scenario-grid scenario-grid--quad fade-in mb-2">
+    <div class="scenario-card winner-risk">
+      <div class="scenario-title"><span class="tag tag-blue">E1</span> Compra · Tomador ($27.571/u)</div>
+      <div class="metric-row"><span class="metric-key">Inversión total</span><span class="metric-val">−USD 14.035.987</span></div>
+      <div class="metric-row"><span class="metric-key">FC anual (años 1–3)</span><span class="metric-val">USD 5.383.244</span></div>
+      <div class="metric-row"><span class="metric-key">VAN</span><span class="metric-val green">USD 8.133.947</span></div>
+      <div class="metric-row"><span class="metric-key">TIR</span><span class="metric-val blue">36,81%</span></div>
+      <div class="metric-row"><span class="metric-key">Payback</span><span class="metric-val">2,61 años</span></div>
+      <div class="metric-row"><span class="metric-key">Valor residual (año 10)</span><span class="metric-val">USD 1.752.000</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="scenario-title"><span class="tag tag-orange">E1</span> Compra · Formador ($26.000/u)</div>
+      <div class="metric-row"><span class="metric-key">Inversión total</span><span class="metric-val">−USD 14.035.987</span></div>
+      <div class="metric-row"><span class="metric-key">FC anual (años 2–10)</span><span class="metric-val">USD 4.422.182</span></div>
+      <div class="metric-row"><span class="metric-key">VAN</span><span class="metric-val green">USD 5.187.479</span></div>
+      <div class="metric-row"><span class="metric-key">TIR</span><span class="metric-val blue">31,69%</span></div>
+      <div class="metric-row"><span class="metric-key">Payback</span><span class="metric-val">~3,1 años (est.)</span></div>
+      <div class="metric-row"><span class="metric-key">Valor residual (año 10)</span><span class="metric-val">USD 1.752.000</span></div>
+    </div>
+    <div class="scenario-card winner">
+      <div class="scenario-title"><span class="tag tag-green">E2</span> Alquiler · Tomador ($27.571/u)</div>
+      <div class="metric-row"><span class="metric-key">Inversión total</span><span class="metric-val">−USD 13.161.137</span></div>
+      <div class="metric-row"><span class="metric-key">FC anual (años 2–10)</span><span class="metric-val">USD 5.383.244</span></div>
+      <div class="metric-row"><span class="metric-key">VAN</span><span class="metric-val green">USD 8.874.886</span></div>
+      <div class="metric-row"><span class="metric-key">TIR</span><span class="metric-val blue">39,18%</span></div>
+      <div class="metric-row"><span class="metric-key">Payback</span><span class="metric-val">2,52 años</span></div>
+      <div class="metric-row"><span class="metric-key">Valor residual (año 10)</span><span class="metric-val">USD 1.752.000</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="scenario-title"><span class="tag tag-cyan">E2</span> Alquiler · Formador ($26.000/u)</div>
+      <div class="metric-row"><span class="metric-key">Inversión total</span><span class="metric-val">−USD 13.161.137</span></div>
+      <div class="metric-row"><span class="metric-key">FC anual (años 1–10)</span><span class="metric-val">USD 4.341.300</span></div>
+      <div class="metric-row"><span class="metric-key">VAN</span><span class="metric-val green">USD 4.821.081</span></div>
+      <div class="metric-row"><span class="metric-key">TIR</span><span class="metric-val blue">31,06%</span></div>
+      <div class="metric-row"><span class="metric-key">Payback</span><span class="metric-val">~3,1 años (est.)</span></div>
+      <div class="metric-row"><span class="metric-key">Valor residual (año 10)</span><span class="metric-val">USD 1.752.000</span></div>
+    </div>
+  </div>
+  <div class="highlight-box fade-in mb-2">
+    <strong>Síntesis:</strong> los cuatro escenarios arrojan VAN positivo a 20,80%. Mayor VAN: <strong>E2 · tomador (USD 8.874.886)</strong>. Mayor TIR: <strong>39,18%</strong> (mismo binomio). E1 · tomador concentra el mayor flujo en el año 1 (USD 5.383.244) y payback 2,61 años.
+  </div>
+
+  <div class="pill-divider fade-in"><span>Payback — flujo acumulado (tomador)</span></div>
+  <div class="scenario-grid fade-in">
+    <div class="scenario-card winner-risk">
+      <div class="scenario-title"><span class="tag tag-blue">E1</span> Recupero</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Año</th><th style="text-align:right;">Flujo (USD)</th><th style="text-align:right;">Acumulado</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td style="text-align:right;">−14.035.987</td><td style="text-align:right;">−14.035.987</td></tr>
+            <tr><td>1</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−8.652.742</td></tr>
+            <tr><td>2</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−3.269.498</td></tr>
+            <tr style="font-weight:700;"><td>3</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">+2.113.746</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight-box success" style="margin-top:0.75rem;margin-bottom:0;">Payback: <strong>2,61 años</strong></div>
+    </div>
+    <div class="scenario-card winner">
+      <div class="scenario-title"><span class="tag tag-green">E2</span> Recupero</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Año</th><th style="text-align:right;">Flujo (USD)</th><th style="text-align:right;">Acumulado</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td style="text-align:right;">−13.161.137</td><td style="text-align:right;">−13.161.137</td></tr>
+            <tr><td>1</td><td style="text-align:right;">5.221.481</td><td style="text-align:right;">−7.939.657</td></tr>
+            <tr><td>2</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−2.556.413</td></tr>
+            <tr style="font-weight:700;"><td>3</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">+2.826.832</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight-box success" style="margin-top:0.75rem;margin-bottom:0;">Payback: <strong>2,52 años</strong></div>
+    </div>
+  </div>
+
+  <div class="highlight-box success fade-in mt-2">
+    <strong>Recomendación (resumen actualizado):</strong> el binomio <strong>E2 — Alquiler Cumbra + tomador de precio</strong> maximiza VAN (USD 8.874.886) y TIR (39,18%) con menor desembolso inicial (USD 13.161.137 vs. USD 14.035.987). <strong>E1 — Compra Maipú</strong> conviene si se prioriza activo patrimonial y predictibilidad de costos fijos a largo plazo.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
 <!-- 10. LAYOUT Y OPERACIONES -->
 <!-- ═══════════════════════════════════════════════ -->
 <section id="layout">
@@ -1995,218 +2285,6 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════ -->
-<!-- 13. COSTOS E INVERSIONES -->
-<!-- ═══════════════════════════════════════════════ -->
-<section id="costos">
-  <div class="sec-label">12 — Costos & Inversiones</div>
-  <h2>La estructura financiera</h2>
-
-  <div class="grid-2 fade-in">
-    <div class="card">
-      <h3>CAPEX — Inversión inicial</h3>
-      <div class="metric-row">
-        <span class="metric-key">Escenario 1 (Compra Maipú)</span>
-        <span class="metric-val green">USD 800.000</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Escenario 2 (Alquiler Cumbra)</span>
-        <span class="metric-val blue">USD 500.000</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Diferencia (menor inversión inicial)</span>
-        <span class="metric-val" style="color:var(--warn);">−USD 300.000</span>
-      </div>
-      <p class="small mt-1" style="color:var(--muted);">El Escenario 2 libera capital para software, marketing e inventario, pero expone al riesgo de ajuste de cánon locativo.</p>
-    </div>
-    <div class="card">
-      <h3>OPEX — Costos fijos anuales</h3>
-      <div class="metric-row">
-        <span class="metric-key">Mínimo</span>
-        <span class="metric-val">USD 800.000 / año</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Probable (base)</span>
-        <span class="metric-val">USD 850.408 / año</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Máximo</span>
-        <span class="metric-val">USD 950.000 / año</span>
-      </div>
-      <p class="small mt-1" style="color:var(--muted);">Igual en ambos escenarios. Incluye RRHH, servicios, logística, costos administrativos y operaciones digitales.</p>
-    </div>
-    <div class="card">
-      <h3>Parámetros de precio y costo unitario</h3>
-      <div class="metric-row">
-        <span class="metric-key">Precio venta (mín/prob/máx)</span>
-        <span class="metric-val">$17.700 / $30.000 / $35.000</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Costo variable (mín/prob/máx)</span>
-        <span class="metric-val">$13.500 / $14.572 / $17.000</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Margen bruto unitario</span>
-        <span class="metric-val green">USD 15.427,97</span>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Capacidad e indicadores operativos</h3>
-      <div class="metric-row">
-        <span class="metric-key">Capacidad instalada</span>
-        <span class="metric-val">970 u/año</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Punto de equilibrio</span>
-        <span class="metric-val green">~56 u/año</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Margen de seguridad</span>
-        <span class="metric-val green">94%</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-key">Punto eq. como % de capacidad</span>
-        <span class="metric-val green">5,7%</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- 14. VIABILIDAD ECONÓMICA -->
-<!-- ═══════════════════════════════════════════════ -->
-<section id="economico">
-  <div class="sec-label">13 — Viabilidad Económica</div>
-  <h2>Monte Carlo: 10.000 futuros posibles</h2>
-
-  <div class="highlight-box fade-in mb-2">
-    <strong>Metodología:</strong> Simulación Monte Carlo con N = 10.000 iteraciones, distribuciones triangulares para variables estocásticas, WACC del 18% anual, horizonte de 5 períodos. Las variables estocásticas son: precio de venta, demanda y costos variables.
-  </div>
-
-  <div class="grid-4 fade-in mb-2">
-    <div class="kpi-card">
-      <div class="kpi-value">USD 25,13M</div>
-      <div class="kpi-label">VAN ESPERADO (ESC. 1)</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value">100%</div>
-      <div class="kpi-label">P(VAN &gt; 0)</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value">2,8–3 a.</div>
-      <div class="kpi-label">PAYBACK</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value">42,6%</div>
-      <div class="kpi-label">COEF. VARIACIÓN</div>
-    </div>
-  </div>
-
-  <div class="fade-in mb-2">
-    <h3 class="mb-1">Distribución del VAN — Percentiles clave (Escenario 1)</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Percentil</th><th>Valor VAN (USD)</th><th>Interpretación</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><span class="tag tag-red">P10 — Pesimista</span></td><td>$11,51 M</td><td>10% de probabilidad de VAN inferior a este valor</td></tr>
-          <tr><td><span class="tag tag-orange">P25 — Bajo</span></td><td>$17,1 M</td><td>25% de probabilidad de VAN inferior a este valor</td></tr>
-          <tr><td><span class="tag tag-blue">P50 — Mediana</span></td><td>$24,42 M</td><td>Valor central de la distribución</td></tr>
-          <tr><td><span class="tag tag-green">P75 — Alto</span></td><td>$32,33 M</td><td>75% de probabilidad de VAN inferior a este valor</td></tr>
-          <tr><td><span class="tag tag-cyan">P90 — Optimista</span></td><td>$39,79 M</td><td>10% de probabilidad de VAN superior a este valor</td></tr>
-          <tr><td style="color:var(--accent);"><strong>Media</strong></td><td><strong>$25,13 M</strong></td><td>Valor esperado de la simulación</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="fade-in">
-    <h3 class="mb-1">Análisis de Sensibilidad — Tornado Chart (Escenario 1)</h3>
-    <div class="tornado">
-      <div class="tornado-row">
-        <div class="tornado-label">Demanda</div>
-        <div class="tornado-bar-wrap">
-          <div class="tornado-bar tornado-pos" style="width:74%;">r = +0,7424</div>
-        </div>
-      </div>
-      <div class="tornado-row">
-        <div class="tornado-label">Precio de venta</div>
-        <div class="tornado-bar-wrap">
-          <div class="tornado-bar tornado-pos" style="width:63%;">r = +0,6278</div>
-        </div>
-      </div>
-      <div class="tornado-row">
-        <div class="tornado-label">Costos variables</div>
-        <div class="tornado-bar-wrap">
-          <div class="tornado-bar tornado-neg" style="width:17%;">r = −0,1700</div>
-        </div>
-      </div>
-      <div class="tornado-row">
-        <div class="tornado-label">Costos fijos</div>
-        <div class="tornado-bar-wrap">
-          <div class="tornado-bar tornado-neg" style="width:2%;">r = −0,0182</div>
-        </div>
-      </div>
-    </div>
-    <div class="highlight-box success mt-1">
-      <strong style="color:var(--success);">Implicancia estratégica:</strong> La variable más crítica es la <strong>demanda</strong>, seguida del precio. Los costos fijos son prácticamente irrelevantes. Esto confirma que la estrategia comercial (penetración, contratos, expansión geográfica) es el principal motor de creación de valor.
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- 15. ESCENARIOS -->
-<!-- ═══════════════════════════════════════════════ -->
-<section id="escenarios">
-  <div class="sec-label">14 — Comparativa de Escenarios</div>
-  <h2>Comprar vs. Alquilar</h2>
-
-  <div class="scenario-grid fade-in">
-    <div class="scenario-card winner-risk">
-      <div class="scenario-title">
-        <span class="tag tag-blue">ESC. 1</span> Compra — Parque Industrial Maipú
-      </div>
-      <div class="metric-row"><span class="metric-key">Inversión inicial</span><span class="metric-val">USD 800.000</span></div>
-      <div class="metric-row"><span class="metric-key">VAN medio (Monte Carlo)</span><span class="metric-val blue">USD 25,13 M</span></div>
-      <div class="metric-row"><span class="metric-key">VAN mediana</span><span class="metric-val">USD 24,42 M</span></div>
-      <div class="metric-row"><span class="metric-key">Desv. estándar</span><span class="metric-val">USD 10,7 M</span></div>
-      <div class="metric-row"><span class="metric-key">Coef. variación</span><span class="metric-val">42,6%</span></div>
-      <div class="metric-row"><span class="metric-key">P(VAN &gt; 0)</span><span class="metric-val green">100,0%</span></div>
-      <div class="metric-row"><span class="metric-key">VAN mínimo</span><span class="metric-val green">USD 0,11 M ✓</span></div>
-      <div class="metric-row"><span class="metric-key">VAN máximo</span><span class="metric-val">USD 62,14 M</span></div>
-      <div class="metric-row"><span class="metric-key">Payback</span><span class="metric-val">2,8 – 3 años</span></div>
-      <div class="metric-row"><span class="metric-key">Variable más influyente</span><span class="metric-val">Demanda (r=0,74)</span></div>
-      <div class="highlight-box" style="margin-top:1rem;margin-bottom:0;">
-        <strong>Perfil:</strong> Menor retorno esperado, <strong>mayor certeza</strong>. VAN mínimo positivo en 100% de iteraciones. Genera activo patrimonial inmobiliario. Ideal si se prioriza seguridad.
-      </div>
-    </div>
-
-    <div class="scenario-card winner">
-      <div class="scenario-title">
-        <span class="tag tag-green">ESC. 2</span> Alquiler — Cumbra ⭐ Mayor retorno
-      </div>
-      <div class="metric-row"><span class="metric-key">Inversión inicial</span><span class="metric-val green">USD 500.000</span></div>
-      <div class="metric-row"><span class="metric-key">VAN determinístico base</span><span class="metric-val green">USD 43,64 M</span></div>
-      <div class="metric-row"><span class="metric-key">VAN medio (Monte Carlo)</span><span class="metric-val green">USD 32,44 M</span></div>
-      <div class="metric-row"><span class="metric-key">VAN mediana</span><span class="metric-val">USD 31,33 M</span></div>
-      <div class="metric-row"><span class="metric-key">Desv. estándar</span><span class="metric-val">USD 14,72 M</span></div>
-      <div class="metric-row"><span class="metric-key">Coef. variación</span><span class="metric-val">45,4%</span></div>
-      <div class="metric-row"><span class="metric-key">P(VAN &gt; 0)</span><span class="metric-val green">~100%</span></div>
-      <div class="metric-row"><span class="metric-key">VAN mínimo</span><span class="metric-val" style="color:var(--warn);">−USD 0,85 M ⚠</span></div>
-      <div class="metric-row"><span class="metric-key">VAN máximo</span><span class="metric-val green">USD 85,34 M</span></div>
-      <div class="metric-row"><span class="metric-key">Variable más influyente</span><span class="metric-val">Precio (r=0,72)</span></div>
-      <div class="highlight-box success" style="margin-top:1rem;margin-bottom:0;">
-        <strong style="color:var(--success);">Perfil:</strong> Mayor retorno esperado (+29% vs. Esc. 1), <strong>mayor dispersión</strong>. Libera capital para software y marketing. VAN mínimo marginalmente negativo en escenario extremo.
-      </div>
-    </div>
-  </div>
-
-  <div class="highlight-box mt-2 fade-in">
-    <strong>Punto de equilibrio (ambos escenarios):</strong> ~55–56 unidades/año sobre una capacidad instalada de 970. Eso es solo el <strong>5,7% de la capacidad</strong>. Margen de seguridad del 94%. El proyecto genera valor desde volúmenes de producción muy bajos.
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ -->
 <!-- 16. RIESGOS -->
 <!-- ═══════════════════════════════════════════════ -->
 <section id="riesgos">
@@ -2217,12 +2295,12 @@
     <div class="risk-item alto">
       <div class="risk-level">🔴 Riesgo Alto</div>
       <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Demanda</h3>
-      <p class="small">Variable de mayor impacto (r=0,74). Caída de ventas afecta directamente el VAN.<br><br><strong>Mitigación:</strong> contratos de largo plazo, MaaS como modelo alternativo, expansión geográfica acelerada, diversificación por verticales (incendios → agro → ganadería).</p>
+      <p class="small">Volumen y precio de venta son los principales drivers del resultado bajo el modelo de flujo actualizado; el costo variable unitario está anclado al BOM y la estructura fija discrimina amortización e intereses por escenario.<br><br><strong>Mitigación:</strong> contratos de largo plazo, MaaS, expansión geográfica y doble estrategia tomador/formador de precio.</p>
     </div>
     <div class="risk-item medio">
       <div class="risk-level">🟡 Riesgo Medio</div>
       <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Precio de venta</h3>
-      <p class="small">Segunda variable crítica (r=0,63–0,72). Presión competitiva de precios asiáticos.<br><br><strong>Mitigación:</strong> estrategia value-based, diferenciación por soporte y plataforma, no competir en precio commodity.</p>
+      <p class="small">La estrategia tomador vs. formador de precio mueve el margen unitario entre <strong>USD 11.105</strong> y <strong>USD 9.534</strong> sobre costo <strong>USD 16.466/u</strong>.<br><br><strong>Mitigación:</strong> value-based pricing, diferenciación por soporte y plataforma, evitar guerra de precios commodity.</p>
     </div>
     <div class="risk-item medio">
       <div class="risk-level">🟡 Riesgo Medio</div>
@@ -2237,12 +2315,12 @@
     <div class="risk-item bajo">
       <div class="risk-level">🟢 Riesgo Bajo</div>
       <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Costos variables</h3>
-      <p class="small">Impacto moderado (r=−0,17) según Monte Carlo. Controlables con compras consolidadas.<br><br><strong>Mitigación:</strong> contratos anuales con proveedores, economías de escala a medida que crece el volumen.</p>
+      <p class="small">El BOM importado con aranceles e IVA concentra el costo variable; shocks cambiarios o logísticos mueven el costo unitario de referencia ($16.466/u).<br><br><strong>Mitigación:</strong> stock de seguridad, compras consolidadas y proveedores alternativos en componentes críticos.</p>
     </div>
     <div class="risk-item bajo">
       <div class="risk-level">🟢 Riesgo Bajo</div>
       <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Costos fijos</h3>
-      <p class="small">Impacto prácticamente despreciable (r=−0,018) según el análisis. Punto de equilibrio ultra-bajo.<br><br><strong>Mitigación:</strong> con solo 56 u/año el proyecto es rentable. Estructura lean desde el inicio.</p>
+      <p class="small">Los costos fijos anuales (aprox. USD 1,43–1,81 M según escenario) son relevantes pero el punto de equilibrio operativo permanece en <strong>163 u/año</strong>.<br><br><strong>Mitigación:</strong> estructura lean, negociación de servicios y selección E1 vs. E2 según perfil de riesgo del sponsor.</p>
     </div>
   </div>
 </section>
@@ -2257,28 +2335,28 @@
   <div class="conclusion-box fade-in">
     <div class="conclusion-verdict">SENTINEL ES VIABLE</div>
     <p style="font-size:1rem;color:rgba(240,244,255,0.85);max-width:720px;margin:0 auto 1.25rem;position:relative;">
-      El ensamble nacional bajo CKD/SKD es <strong>técnicamente consistente</strong> con la cadena de suministro disponible; el posicionamiento hardware + SaaS es <strong>económicamente defendible</strong> frente a importadores puramente commodity; y el perfil Monte Carlo exhibe <strong>robustez financiera</strong> a tasa exigente.
+      El ensamble nacional bajo CKD/SKD es <strong>técnicamente consistente</strong> con la cadena de suministro disponible; el posicionamiento hardware + SaaS es <strong>económicamente defendible</strong> frente a importadores puramente commodity; y el estudio actualizado con <strong>WACC 20,80%</strong> y horizonte 10 años muestra <strong>VAN positivo en las cuatro variantes</strong> evaluadas.
     </p>
     <p style="font-size:0.95rem;color:rgba(240,244,255,0.78);max-width:720px;margin:0 auto 2rem;position:relative;">
-      Ambos escenarios presentan <strong>P(VAN &gt; 0) = 100%</strong> o cercano al 100%, con VAN esperados de <strong>USD 25,13 M y USD 32,44 M</strong> respectivamente, a WACC del 18% anual. La escalabilidad llega por servicios y licencias; la diferenciación, por IA y nube operativa.
+      VAN máximo <strong>USD 8.874.886</strong> (E2 · tomador), TIR máxima <strong>39,18%</strong>, payback mínimo <strong>2,52 años</strong> y punto de equilibrio <strong>163 u/año</strong> (16,8% de capacidad). La escalabilidad llega por servicios y licencias; la diferenciación, por IA y nube operativa.
     </p>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;max-width:800px;margin:0 auto;position:relative;">
       <div class="kpi-card">
-        <div class="kpi-value">USD 25M+</div>
-        <div class="kpi-label">VAN ESPERADO MIN.</div>
+        <div class="kpi-value">USD 8,87M</div>
+        <div class="kpi-label">VAN MÁX. (RESUMEN)</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-value">100%</div>
-        <div class="kpi-label">VIABILIDAD ESTOCÁSTICA</div>
+        <div class="kpi-value">39,18%</div>
+        <div class="kpi-label">TIR MÁX.</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-value">94%</div>
+        <div class="kpi-value">83,2%</div>
         <div class="kpi-label">MARGEN DE SEGURIDAD</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-value">&lt;3 años</div>
-        <div class="kpi-label">RECUPERO DE INVERSIÓN</div>
+        <div class="kpi-value">2,52 a.</div>
+        <div class="kpi-label">PAYBACK MÍN.</div>
       </div>
     </div>
   </div>
@@ -2287,7 +2365,7 @@
     <div class="card">
       <span class="card-icon">✅</span>
       <h3>Viabilidad integral</h3>
-      <p>El proyecto es prefactible en dimensiones técnica, económica y financiera: demanda acotada supera ampliamente el punto de equilibrio y el margen de seguridad operativo es elevado.</p>
+      <p>El proyecto es prefactible en dimensiones técnica, económica y financiera: el punto de equilibrio queda en <strong>163 u/año</strong> frente a 970 u de capacidad y los cuatro flujos del resumen actualizado arrojan VAN positivo a <strong>20,80%</strong>.</p>
     </div>
     <div class="card">
       <span class="card-icon">🚀</span>
@@ -2304,7 +2382,7 @@
   <div class="highlight-box success mt-2 fade-in" style="text-align:center;padding:2rem;">
     <p style="font-size:1rem;color:var(--white);margin:0;">
       <strong style="font-family:'Syne',sans-serif;font-size:1.1rem;">El Proyecto Sentinel STRATOS se muestra PREFACTIBLE desde la perspectiva económico-financiera en ambos escenarios evaluados.</strong><br>
-      <span style="color:var(--muted);font-size:0.85rem;display:block;margin-top:0.5rem;">— Conclusión oficial del Estudio Económico, Capítulo 17 —</span>
+      <span style="color:var(--muted);font-size:0.85rem;display:block;margin-top:0.5rem;">— Conclusión alineada a Sentinel_Resumen_Actualizado.html —</span>
     </p>
   </div>
 </section>
