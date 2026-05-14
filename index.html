@@ -1425,6 +1425,65 @@
     color: rgba(240,244,255,0.72);
     font-weight: 600;
   }
+
+  .fin-viz-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .fin-viz-kpis .dash-kpi { cursor: default; }
+
+  .chart-analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .chart-js-panel {
+    background: rgba(4,12,24,0.65);
+    border: 1px solid rgba(59,138,255,0.16);
+    border-radius: 16px;
+    padding: 1.1rem 1.15rem 1.2rem;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+
+  .chart-js-panel:hover {
+    border-color: rgba(34,232,255,0.26);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.3);
+  }
+
+  .chart-js-panel h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin: 0 0 0.35rem;
+    color: rgba(238,243,255,0.92);
+  }
+
+  .chart-js-panel .chart-note {
+    font-size: 0.68rem;
+    color: rgba(238,243,255,0.45);
+    line-height: 1.45;
+    margin-top: 0.65rem;
+  }
+
+  .chart-canvas-wrap {
+    position: relative;
+    height: 260px;
+    margin-top: 0.35rem;
+  }
+
+  .chart-canvas-wrap.chart-canvas--tall {
+    height: 300px;
+  }
+
+  .chart-canvas-wrap.chart-canvas--wide {
+    height: 280px;
+  }
 </style>
 </head>
 <body class="sentinel-site">
@@ -1892,6 +1951,15 @@
     </div>
   </div>
 
+  <div class="chart-js-panel fade-in mt-2" style="max-width:min(520px,100%);margin-left:auto;margin-right:auto;">
+    <div class="chart-ph-label">Chart.js · donut</div>
+    <h4>Ingresos por palanca (970 u · escenario tomador)</h4>
+    <div class="chart-canvas-wrap">
+      <canvas id="chartUenDonut" aria-label="Donut ingresos por UEN"></canvas>
+    </div>
+    <p class="chart-note">Hardware = ingreso anual 970 u a USD 27.571/u (resumen). Servicios y Sentinel Cloud con participación ilustrativa coherente con modelo dual (sin cifra detallada en resumen).</p>
+  </div>
+
   <div class="highlight-box success mt-2 fade-in">
     <strong style="color:var(--success);">Resiliencia del modelo dual:</strong> El mix Hardware + SaaS reduce la exposición a la volatilidad de cualquier fuente individual. El módulo SaaS aporta recurrencia y previsibilidad al flujo de caja proyectado.
   </div>
@@ -2057,6 +2125,15 @@
       </tbody>
     </table>
     <p class="table-note">Escala 1–10 por factor · método de factores ponderados · fuente: estudio de viabilidad del proyecto.</p>
+  </div>
+
+  <div class="chart-js-panel fade-in mb-2">
+    <div class="chart-ph-label">Chart.js · barras agrupadas</div>
+    <h4>Puntajes por factor y región (1–10)</h4>
+    <div class="chart-canvas-wrap chart-canvas--tall">
+      <canvas id="chartLocBar" aria-label="Factores de localización comparados"></canvas>
+    </div>
+    <p class="chart-note">Ponderaciones por fila en la tabla superior (demanda 0,20; espacio aéreo 0,15; etc.). Barras = nota 1–10; comparación visual Mendoza vs Buenos Aires vs Río Negro.</p>
   </div>
 
   <div class="highlight-box success fade-in mb-2">
@@ -2266,6 +2343,13 @@
     <div class="dash-kpi"><div class="dv">USD 27.571</div><div class="dl">Precio tomador / u</div></div>
   </div>
 
+  <div class="fin-viz-kpis fade-in">
+    <div class="dash-kpi"><div class="dv">USD 5,19M</div><div class="dl">Inversión inicial (E1 c/IVA)</div></div>
+    <div class="dash-kpi"><div class="dv">USD 16.466</div><div class="dl">Costo unitario (BOM+prorrata)</div></div>
+    <div class="dash-kpi"><div class="dv">USD 27.571</div><div class="dl">Precio de venta tomador / u</div></div>
+    <div class="dash-kpi"><div class="dv">USD 11.105</div><div class="dl">Margen bruto / u (tomador)</div></div>
+  </div>
+
   <div class="pill-divider fade-in"><span>Ingresos modelados — 970 u/año</span></div>
   <div class="stream-grid fade-in">
     <div class="stream-card">
@@ -2342,6 +2426,25 @@
         <div class="capox-track"><div class="capox-fill green" style="width:8.72%"></div></div>
       </div>
       <p class="small mt-1" style="color:rgba(238,243,255,0.48);margin:0.85rem 0 0;">Anchos de CF fijo vs. costo variable total del resumen. RR.HH.: 23 puestos · USD 96.365/mes · USD 1.203.114/año.</p>
+    </div>
+  </div>
+
+  <div class="chart-analytics-grid fade-in">
+    <div class="chart-js-panel">
+      <div class="chart-ph-label">Chart.js · barras</div>
+      <h4>CAPEX vs costos operativos anuales (E1 · resumen)</h4>
+      <div class="chart-canvas-wrap chart-canvas--wide">
+        <canvas id="chartCostsBar" aria-label="Gráfico de barras CAPEX y OPEX"></canvas>
+      </div>
+      <p class="chart-note">Eje en millones USD. CAPEX = inversión inicial E1 con IVA. Barras operativas desde costos variables totales, costos fijos E1 y massa salarial anual del resumen.</p>
+    </div>
+    <div class="chart-js-panel">
+      <div class="chart-ph-label">Chart.js · torta</div>
+      <h4>Distribución anual de costos fijos + variable (E1)</h4>
+      <div class="chart-canvas-wrap">
+        <canvas id="chartCostsPie" aria-label="Gráfico de torta distribución de costos"></canvas>
+      </div>
+      <p class="chart-note">Insumos = BOM anual. Mano de obra = MOD + sueldos indirectos. Infraestructura = amortización + servicios/seguros. Financiamiento = intereses préstamo (BICE).</p>
     </div>
   </div>
 
@@ -2989,6 +3092,7 @@
   Riquero Franco · Silva Lautaro · Toledano Martin · Sosa Maria Iveth · Ingeniería Industrial
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   // Intersection Observer para fade-in
   const observer = new IntersectionObserver((entries) => {
@@ -3029,6 +3133,215 @@
   window.addEventListener('scroll', updateScrollUI, { passive: true });
   window.addEventListener('resize', updateScrollUI, { passive: true });
   updateScrollUI();
+
+  if (typeof Chart !== 'undefined') {
+    const fmtUSD = (v) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v);
+    const gridCol = 'rgba(59,138,255,0.12)';
+    const tickCol = 'rgba(238,243,255,0.55)';
+    const fontFam = "'DM Sans','Instrument Sans',system-ui,sans-serif";
+
+    Chart.defaults.color = tickCol;
+    Chart.defaults.borderColor = gridCol;
+    Chart.defaults.font.family = fontFam;
+
+    const barEl = document.getElementById('chartCostsBar');
+    if (barEl) {
+      const ctxB = barEl.getContext('2d');
+      new Chart(ctxB, {
+        type: 'bar',
+        data: {
+          labels: ['CAPEX inicial\n(E1 c/IVA)', 'Costos variables\n(anual)', 'Costos fijos E1\n(CF anual)', 'RR.HH. total\n(anual)'],
+          datasets: [{
+            label: 'USD (millones)',
+            data: [5194805 / 1e6, 16399626 / 1e6, 1812074 / 1e6, 1203114 / 1e6],
+            backgroundColor: [
+              'rgba(59,138,255,0.75)',
+              'rgba(34,232,255,0.55)',
+              'rgba(124,249,255,0.45)',
+              'rgba(0,240,181,0.5)'
+            ],
+            borderWidth: 0,
+            borderRadius: 8,
+            hoverBackgroundColor: [
+              'rgba(59,138,255,0.95)',
+              'rgba(34,232,255,0.75)',
+              'rgba(124,249,255,0.65)',
+              'rgba(0,240,181,0.7)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (c) => {
+                  const raw = [5194805, 16399626, 1812074, 1203114][c.dataIndex];
+                  return fmtUSD(raw);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: tickCol, maxRotation: 28, minRotation: 0, font: { size: 10 } },
+              grid: { color: gridCol }
+            },
+            y: {
+              ticks: {
+                color: tickCol,
+                callback: (v) => v + ' M'
+              },
+              grid: { color: gridCol },
+              beginAtZero: true,
+              title: { display: true, text: 'Millones USD', color: 'rgba(238,243,255,0.4)', font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
+    const pieEl = document.getElementById('chartCostsPie');
+    if (pieEl) {
+      new Chart(pieEl.getContext('2d'), {
+        type: 'pie',
+        data: {
+          labels: ['Insumos (BOM)', 'Mano de obra', 'Infraestructura', 'Financiamiento (intereses)'],
+          datasets: [{
+            data: [15972402, 1156374, 491088, 591837],
+            backgroundColor: [
+              'rgba(59,138,255,0.85)',
+              'rgba(34,232,255,0.7)',
+              'rgba(124,249,255,0.55)',
+              'rgba(0,240,181,0.65)'
+            ],
+            borderColor: 'rgba(2,5,8,0.85)',
+            borderWidth: 2,
+            hoverOffset: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: tickCol, boxWidth: 12, padding: 14, font: { size: 11 } }
+            },
+            tooltip: {
+              callbacks: {
+                label: (c) => {
+                  const t = c.dataset.data.reduce((a, b) => a + b, 0);
+                  const pct = ((c.parsed / t) * 100).toFixed(1);
+                  return c.label + ': ' + fmtUSD(c.parsed) + ' (' + pct + '%)';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    const donutEl = document.getElementById('chartUenDonut');
+    if (donutEl) {
+      const hw = 26744286;
+      const sv = 2400000;
+      const cl = 1400000;
+      new Chart(donutEl.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Venta de drones (UEN I)', 'Servicios (UEN II)', 'Sentinel Cloud (UEN III)'],
+          datasets: [{
+            data: [hw, sv, cl],
+            backgroundColor: [
+              'rgba(59,138,255,0.88)',
+              'rgba(34,232,255,0.72)',
+              'rgba(0,240,181,0.65)'
+            ],
+            borderColor: 'rgba(2,5,8,0.9)',
+            borderWidth: 2,
+            hoverOffset: 12,
+            cutout: '58%'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: tickCol, boxWidth: 12, padding: 12, font: { size: 11 } }
+            },
+            tooltip: {
+              callbacks: {
+                label: (c) => {
+                  const vals = [hw, sv, cl];
+                  return c.label + ': ' + fmtUSD(vals[c.dataIndex]);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    const locEl = document.getElementById('chartLocBar');
+    if (locEl) {
+      new Chart(locEl.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Demanda', 'Espacio aéreo', 'Ecosistema', 'Logística', 'Costos op.', 'Servicios', 'Clima', 'Apoyo público', 'Seguridad'],
+          datasets: [
+            {
+              label: 'Mendoza',
+              data: [8, 7, 8, 8, 6, 8, 7, 7, 7],
+              backgroundColor: 'rgba(59,138,255,0.75)',
+              borderRadius: 4
+            },
+            {
+              label: 'Buenos Aires',
+              data: [6, 8, 6, 7, 7, 6, 7, 6, 7],
+              backgroundColor: 'rgba(34,232,255,0.55)',
+              borderRadius: 4
+            },
+            {
+              label: 'Río Negro',
+              data: [7, 9, 6, 6, 7, 6, 6, 8, 7],
+              backgroundColor: 'rgba(0,240,181,0.45)',
+              borderRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { color: tickCol, boxWidth: 10, padding: 16 }
+            }
+          },
+          scales: {
+            x: {
+              stacked: false,
+              ticks: { color: tickCol, maxRotation: 40, font: { size: 10 } },
+              grid: { color: gridCol }
+            },
+            y: {
+              min: 0,
+              max: 10,
+              ticks: { stepSize: 2, color: tickCol },
+              grid: { color: gridCol },
+              title: { display: true, text: 'Puntaje 1–10', color: 'rgba(238,243,255,0.4)', font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+  }
 </script>
 </body>
 </html>
