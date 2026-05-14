@@ -4,49 +4,80 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sentinel — Plataforma VTOL, IA y Sentinel Cloud</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #040d1f;
-    --deep: #071428;
-    --blue: #0d2a5c;
-    --mid: #1a4a9c;
-    --accent: #2b7fff;
-    --cyan: #00d4ff;
-    --white: #f0f4ff;
-    --muted: #8ba3cc;
-    --border: rgba(43,127,255,0.18);
-    --glass: rgba(13,42,92,0.45);
-    --success: #00e5a0;
-    --warn: #ff9500;
-    --danger: #ff3b5c;
-    --grad: linear-gradient(135deg, #2b7fff 0%, #00d4ff 100%);
+    --void: #020508;
+    --navy: #030a14;
+    --deep: #061018;
+    --blue: #0a1e3d;
+    --mid: #153a72;
+    --accent: #3b8aff;
+    --accent-dim: #1e5f99;
+    --cyan: #22e8ff;
+    --white: #eef3ff;
+    --muted: #7d92b8;
+    --border: rgba(59,138,255,0.14);
+    --glass: rgba(8,24,52,0.55);
+    --glass-bright: rgba(20,48,96,0.35);
+    --success: #00f0b5;
+    --warn: #ffb547;
+    --danger: #ff4d6d;
+    --grad: linear-gradient(135deg, #3b8aff 0%, #22e8ff 55%, #7cf9ff 100%);
+    --grad-soft: linear-gradient(180deg, rgba(59,138,255,0.12) 0%, transparent 45%);
+    --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { scroll-behavior: smooth; }
 
-  body {
-    background: var(--navy);
+  body.sentinel-site {
+    background: var(--void);
     color: var(--white);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Instrument Sans', 'DM Sans', system-ui, sans-serif;
     font-size: 15px;
-    line-height: 1.65;
+    line-height: 1.55;
     overflow-x: hidden;
+    letter-spacing: 0.01em;
   }
 
-  /* ── GRID NOISE BACKGROUND ── */
-  body::before {
+  body.sentinel-site::before {
     content: '';
     position: fixed;
     inset: 0;
     background-image:
-      linear-gradient(rgba(43,127,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(43,127,255,0.03) 1px, transparent 1px);
-    background-size: 48px 48px;
+      linear-gradient(rgba(59,138,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,138,255,0.04) 1px, transparent 1px),
+      var(--noise);
+    background-size: 56px 56px, 56px 56px, 320px 320px;
     pointer-events: none;
     z-index: 0;
+  }
+
+  body.sentinel-site::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 90% 55% at 50% -15%, rgba(59,138,255,0.22), transparent 52%),
+      radial-gradient(ellipse 70% 50% at 100% 30%, rgba(34,232,255,0.06), transparent 45%),
+      radial-gradient(ellipse 60% 45% at 0% 70%, rgba(30,95,153,0.12), transparent 50%),
+      linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .scroll-progress {
+    position: fixed;
+    top: 58px;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    z-index: 1001;
+    background: var(--grad);
+    box-shadow: 0 0 24px rgba(34,232,255,0.5);
+    transition: width 0.12s linear;
   }
 
   /* ── NAV ── */
@@ -54,14 +85,14 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 1000;
-    background: rgba(4,13,31,0.88);
-    backdrop-filter: blur(16px);
+    background: rgba(2,5,8,0.72);
+    backdrop-filter: blur(20px) saturate(1.4);
     border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
+    padding: 0 clamp(1rem, 3vw, 2.5rem);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 56px;
+    height: 58px;
     gap: 1rem;
     overflow-x: auto;
     scrollbar-width: thin;
@@ -70,84 +101,107 @@
   .nav-logo {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
-    font-size: 1rem;
-    letter-spacing: 0.08em;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
     background: var(--grad);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    white-space: nowrap;
   }
 
   .nav-links {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.15rem;
     flex-wrap: nowrap;
   }
 
   .nav-links a {
-    color: var(--muted);
+    color: rgba(238,243,255,0.55);
     text-decoration: none;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-family: 'DM Mono', monospace;
-    letter-spacing: 0.04em;
-    padding: 0.25rem 0.6rem;
-    border-radius: 4px;
-    transition: all 0.2s;
+    letter-spacing: 0.06em;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s, box-shadow 0.2s;
   }
 
   .nav-links a:hover {
-    color: var(--accent);
-    background: rgba(43,127,255,0.1);
+    color: var(--white);
+    background: rgba(59,138,255,0.12);
+    box-shadow: 0 0 0 1px rgba(59,138,255,0.2);
   }
 
-  /* ── SECTIONS ── */
   section {
     position: relative;
     z-index: 1;
-    padding: 5rem 2rem;
-    max-width: 1200px;
+    padding: clamp(4.5rem, 11vw, 9rem) clamp(1.25rem, 4vw, 3rem);
+    max-width: min(1240px, 100%);
     margin: 0 auto;
+    border-top: none;
+    scroll-margin-top: 72px;
   }
 
-  section + section {
-    border-top: 1px solid var(--border);
+  section + section::before {
+    content: '';
+    display: block;
+    height: 1px;
+    margin: -1px auto 0;
+    max-width: min(900px, 88%);
+    background: linear-gradient(90deg, transparent, rgba(59,138,255,0.35), transparent);
   }
 
-  /* ── SECTION LABELS ── */
   .sec-label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    color: var(--accent);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    color: var(--cyan);
     text-transform: uppercase;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.75rem;
+    opacity: 0.9;
   }
 
   .sec-label::before {
     content: '';
     display: block;
-    width: 24px;
+    width: 32px;
     height: 1px;
-    background: var(--accent);
+    background: linear-gradient(90deg, var(--cyan), transparent);
   }
 
-  /* ── HEADINGS ── */
   h1, h2, h3 { font-family: 'Syne', sans-serif; }
 
   h2 {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: clamp(1.85rem, 4.2vw, 3.1rem);
     font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 2rem;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+    max-width: 18ch;
   }
 
   h3 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.6rem;
     color: var(--white);
+    letter-spacing: -0.02em;
+  }
+
+  body.sentinel-site p {
+    color: rgba(238,243,255,0.68);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin-bottom: 0.65rem;
+    max-width: 62ch;
+  }
+
+  body.sentinel-site li {
+    font-size: 0.84rem;
+    color: rgba(238,243,255,0.68);
   }
 
   /* ── HERO ── */
@@ -157,11 +211,44 @@
     flex-direction: column;
     justify-content: center;
     padding-top: 7rem;
-    padding-bottom: 4rem;
-    max-width: 1200px;
+    padding-bottom: 5rem;
+    max-width: min(1240px, 100%);
     margin: 0 auto;
     position: relative;
     z-index: 1;
+    isolation: isolate;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    width: min(140vw, 900px);
+    height: min(140vw, 900px);
+    right: -18%;
+    top: 50%;
+    transform: translateY(-52%);
+    background:
+      radial-gradient(circle at 40% 40%, rgba(34,232,255,0.14), transparent 55%),
+      radial-gradient(circle at 70% 60%, rgba(59,138,255,0.18), transparent 50%);
+    filter: blur(2px);
+    z-index: -1;
+    pointer-events: none;
+    animation: orbDrift 18s ease-in-out infinite alternate;
+  }
+
+  #hero::after {
+    content: '';
+    position: absolute;
+    inset: 10% -5% auto -5%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34,232,255,0.25), transparent);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  @keyframes orbDrift {
+    from { transform: translateY(-52%) rotate(0deg) scale(1); }
+    to { transform: translateY(-48%) rotate(8deg) scale(1.04); }
   }
 
   .hero-badge {
@@ -462,7 +549,6 @@
 
   @media (max-width: 640px) {
     .scenario-grid { grid-template-columns: 1fr; }
-    nav { display: none; }
   }
 
   .scenario-card {
@@ -722,11 +808,10 @@
   }
 
   /* ── UTILITY ── */
-  p { color: rgba(240,244,255,0.75); font-size: 0.88rem; line-height: 1.7; margin-bottom: 0.75rem; }
   p:last-child { margin-bottom: 0; }
   strong { color: var(--white); font-weight: 500; }
   ul { list-style: none; padding: 0; }
-  li { padding: 0.35rem 0; padding-left: 1rem; position: relative; font-size: 0.86rem; color: rgba(240,244,255,0.75); }
+  li { padding: 0.35rem 0; padding-left: 1rem; position: relative; }
   li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.75rem; top: 0.42rem; }
 
   .text-accent { color: var(--accent); }
@@ -958,6 +1043,380 @@
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   }
 
+  /* ═══ FINANCE COMMAND CENTER ═══ */
+  section#finanzas {
+    max-width: min(1320px, 100%);
+  }
+
+  .fin-head {
+    max-width: 22ch;
+    margin-bottom: 0.5rem;
+  }
+
+  .fin-tagline {
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+    color: rgba(238,243,255,0.52);
+    max-width: 52ch;
+    margin-bottom: 2.5rem;
+    line-height: 1.55;
+  }
+
+  .dash-kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .dash-kpi {
+    background: linear-gradient(145deg, rgba(8,24,52,0.75), rgba(4,10,20,0.4));
+    border: 1px solid rgba(59,138,255,0.18);
+    border-radius: 14px;
+    padding: 1.1rem 1.15rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  }
+
+  .dash-kpi:hover {
+    transform: translateY(-4px);
+    border-color: rgba(34,232,255,0.35);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  }
+
+  .dash-kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--grad);
+    opacity: 0.85;
+  }
+
+  .dash-kpi .dv {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.1rem, 2.2vw, 1.55rem);
+    font-weight: 800;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+    margin-bottom: 0.35rem;
+  }
+
+  .dash-kpi .dl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+    color: rgba(238,243,255,0.42);
+    text-transform: uppercase;
+  }
+
+  .dash-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .chart-slot {
+    background: rgba(4,12,24,0.65);
+    border: 1px solid rgba(59,138,255,0.14);
+    border-radius: 16px;
+    padding: 1.25rem 1.35rem;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chart-slot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 40%, rgba(34,232,255,0.04) 50%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .chart-slot h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 1rem;
+    color: rgba(238,243,255,0.9);
+  }
+
+  .chart-ph-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    margin-bottom: 0.75rem;
+    opacity: 0.85;
+  }
+
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    flex: 1;
+    min-height: 120px;
+    padding-top: 0.5rem;
+  }
+
+  .chart-bar {
+    flex: 1;
+    border-radius: 4px 4px 0 0;
+    background: linear-gradient(180deg, rgba(59,138,255,0.88), rgba(34,232,255,0.22));
+    opacity: 0.88;
+    transition: opacity 0.3s, transform 0.3s;
+    transform-origin: bottom;
+  }
+
+  .chart-bar:hover { opacity: 1; transform: scaleY(1.03); }
+
+  .stream-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stream-card {
+    border-radius: 16px;
+    padding: 1.35rem 1.4rem;
+    border: 1px solid rgba(59,138,255,0.16);
+    background: linear-gradient(160deg, rgba(20,48,96,0.28), rgba(4,10,20,0.55));
+    transition: border-color 0.25s, transform 0.25s;
+  }
+
+  .stream-card:hover {
+    border-color: rgba(34,232,255,0.28);
+    transform: translateY(-2px);
+  }
+
+  .stream-card .st-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.16em;
+    color: rgba(238,243,255,0.42);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .stream-card .st-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.28rem;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+
+  .stream-card .st-note {
+    font-size: 0.76rem;
+    color: rgba(238,243,255,0.48);
+    line-height: 1.45;
+  }
+
+  .split-capox {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .capox {
+    border-radius: 18px;
+    padding: 1.5rem 1.6rem;
+    border: 1px solid rgba(59,138,255,0.18);
+    background: rgba(6,16,32,0.55);
+    backdrop-filter: blur(12px);
+  }
+
+  .capox h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .capox-bar-row { margin-bottom: 0.85rem; }
+  .capox-bar-row:last-child { margin-bottom: 0; }
+
+  .capox-bar-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: rgba(238,243,255,0.52);
+    margin-bottom: 0.35rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .capox-track {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+
+  .capox-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--grad);
+  }
+
+  .capox-fill.green {
+    background: linear-gradient(90deg, rgba(0,240,181,0.92), rgba(34,232,255,0.45));
+  }
+
+  .bm-viz {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: stretch;
+    gap: 0.5rem;
+    margin: 2rem 0 2.5rem;
+    padding: 1.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(59,138,255,0.15);
+    background: linear-gradient(180deg, rgba(10,30,60,0.42), rgba(2,5,8,0.2));
+  }
+
+  @media (max-width: 900px) {
+    .bm-viz { grid-template-columns: 1fr; text-align: center; }
+    .bm-rail { display: none !important; }
+  }
+
+  .bm-node {
+    padding: 1.1rem 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.28);
+  }
+
+  .bm-node strong {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.86rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .bm-node span {
+    font-size: 0.74rem;
+    color: rgba(238,243,255,0.48);
+    line-height: 1.4;
+  }
+
+  .bm-core {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem 1rem;
+  }
+
+  .bm-core .orb {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(34,232,255,0.38), rgba(59,138,255,0.12));
+    border: 1px solid rgba(34,232,255,0.35);
+    box-shadow: 0 0 40px rgba(34,232,255,0.1);
+    margin-bottom: 0.65rem;
+  }
+
+  .bm-rail {
+    width: 2px;
+    background: linear-gradient(180deg, transparent, rgba(59,138,255,0.45), transparent);
+    min-height: 40px;
+    align-self: center;
+  }
+
+  .scale-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .scale-tile {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .scale-tile b {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+
+  .scale-tile span {
+    font-size: 0.65rem;
+    color: rgba(238,243,255,0.42);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  details.data-drawer {
+    border: 1px solid rgba(59,138,255,0.14);
+    border-radius: 14px;
+    background: rgba(4,12,24,0.45);
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+
+  details.data-drawer summary {
+    cursor: pointer;
+    padding: 0.9rem 1.1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(238,243,255,0.62);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+
+  details.data-drawer summary::-webkit-details-marker { display: none; }
+
+  details.data-drawer summary::after {
+    content: '+';
+    color: var(--cyan);
+    font-size: 1rem;
+  }
+
+  details.data-drawer[open] summary::after { content: '−'; }
+
+  details.data-drawer .drawer-body {
+    padding: 0 1rem 1rem;
+    border-top: 1px solid rgba(59,138,255,0.08);
+  }
+
+  .fin-callout {
+    border-radius: 16px;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid rgba(0,240,181,0.22);
+    background: linear-gradient(135deg, rgba(0,240,181,0.07), rgba(4,12,24,0.55));
+    margin-top: 1rem;
+  }
+
+  .fin-callout p {
+    margin: 0;
+    font-size: 0.84rem;
+    color: rgba(238,243,255,0.72);
+    max-width: none;
+  }
+
   .hero-title .line2 {
     display: block;
     font-size: 0.42em;
@@ -968,7 +1427,9 @@
   }
 </style>
 </head>
-<body>
+<body class="sentinel-site">
+
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
 <!-- NAV -->
 <nav>
@@ -1774,179 +2235,310 @@
 <!-- 9b. ECONOMICS & FINANCIALS (fuente: Sentinel_Resumen_Actualizado.html) -->
 <!-- ═══════════════════════════════════════════════ -->
 <section id="finanzas">
-  <div class="sec-label">12 — Economics &amp; Financials</div>
-  <h2>Dashboard financiero actualizado</h2>
-  <p class="lede fade-in">Cifras y supuestos alineados al resumen ejecutivo actualizado (CAPEX detallado, CAPM / EMBI+ 29/04/2026, financiamiento BICE Comex, costos variables con BOM y estructura fija por escenario).</p>
+  <div class="sec-label fade-in">Economía · Command Center</div>
+  <h2 class="fin-head fade-in">Capital, flujo y retorno — misma data, lectura de board.</h2>
+  <p class="fin-tagline fade-in">Supuestos y cifras del resumen ejecutivo actualizado: CAPEX desagregado, CAPM / EMBI+ (29/04/2026), BICE Comex, costos variables con BOM, estructura fija por escenario y cuatro trayectorias de FCF a <strong>r = 20,80%</strong>.</p>
 
-  <div class="pill-divider fade-in"><span>CAPEX — inversión inicial</span></div>
-  <div class="grid-2 fade-in mb-2">
-    <div class="scenario-card winner-risk">
-      <div class="scenario-title"><span class="tag tag-blue">E1</span> Compra Parque Industrial Maipú</div>
-      <div class="metric-row"><span class="metric-key">Total sin IVA</span><span class="metric-val">USD 4.334.880</span></div>
-      <div class="metric-row"><span class="metric-key">Total con IVA</span><span class="metric-val blue">USD 5.194.805</span></div>
-      <div class="metric-row"><span class="metric-key">Amortización anual</span><span class="metric-val">USD 307.038</span></div>
+  <div class="bm-viz fade-in mb-2">
+    <div class="bm-node">
+      <strong>Planta &amp; edge</strong>
+      <span>970 u/año nominales · CKD/SKD · BOM USD 16.466/u en Arg. · MOD USD 427.224/año.</span>
     </div>
-    <div class="scenario-card winner">
-      <div class="scenario-title"><span class="tag tag-green">E2</span> Alquiler Nave Cumbra</div>
-      <div class="metric-row"><span class="metric-key">Total sin IVA</span><span class="metric-val">USD 3.617.635</span></div>
-      <div class="metric-row"><span class="metric-key">Total con IVA</span><span class="metric-val green">USD 4.376.918</span></div>
-      <div class="metric-row"><span class="metric-key">Amortización anual</span><span class="metric-val">USD 292.302</span></div>
+    <div class="bm-rail" aria-hidden="true"></div>
+    <div class="bm-core">
+      <div class="orb" aria-hidden="true"></div>
+      <strong style="font-family:'Syne',sans-serif;font-size:0.95rem;letter-spacing:0.06em;">Sentinel OS</strong>
+      <span style="font-size:0.72rem;max-width:28ch;">Hardware como enabler · IA en borde · orquestación y datos en Sentinel Cloud.</span>
     </div>
-  </div>
-  <div class="grid-4 fade-in mb-2">
-    <div class="kpi-card"><div class="kpi-value">$1,89 M</div><div class="kpi-label">CONSTRUCCIÓN (E1)</div></div>
-    <div class="kpi-card"><div class="kpi-value">$1,28 M</div><div class="kpi-label">ADECUACIÓN (E2)</div></div>
-    <div class="kpi-card"><div class="kpi-value">$1,19 M</div><div class="kpi-label">MAQUINARIA Y EQUIPOS</div></div>
-    <div class="kpi-card"><div class="kpi-value">$250 K</div><div class="kpi-label">JAULA INDOOR (DESTACADO)</div></div>
-  </div>
-  <div class="table-wrap fade-in mb-2">
-    <table>
-      <thead>
-        <tr><th>Categoría</th><th class="td-right" style="text-align:right;">E1 — Compra (USD s/IVA)</th><th class="td-right" style="text-align:right;">E2 — Alquiler (USD s/IVA)</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>1. Terreno / Nave</td><td style="text-align:right;">$240.000</td><td style="text-align:right;">$2.000 (alquiler/mes)</td></tr>
-        <tr><td>2. Construcción (nave 800 m² + oficinas 500 m²)</td><td style="text-align:right;">$1.890.000</td><td style="text-align:right;">—</td></tr>
-        <tr><td>2b. Adecuación galpón (E2)</td><td style="text-align:right;">—</td><td style="text-align:right;">$1.281.100</td></tr>
-        <tr><td>3. Maquinaria y Equipos</td><td style="text-align:right;">$1.187.600</td><td style="text-align:right;">$1.187.600</td></tr>
-        <tr><td>4. Muebles y Útiles</td><td style="text-align:right;">$147.500</td><td style="text-align:right;">$147.500</td></tr>
-        <tr><td>5. Rodados</td><td style="text-align:right;">$190.000</td><td style="text-align:right;">$190.000</td></tr>
-        <tr><td>6. Puesta en Marcha</td><td style="text-align:right;">$178.140</td><td style="text-align:right;">$178.140</td></tr>
-        <tr style="font-weight:700;"><td>TOTAL INVERSIÓN</td><td style="text-align:right;">$4.334.880</td><td style="text-align:right;">$3.617.635</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="highlight-box fade-in mb-2">
-    <strong>Equipamiento destacado:</strong> 4 brazos robóticos colaborativos ($161.200), jaula de vuelo indoor ($250.000), sistema de calibración IMU/brújula ($30.000), colimador/banco óptico ($50.000), infraestructura de red ($100.000). Vida útil promedio ponderada: 7,69 años.
-  </div>
-
-  <div class="pill-divider fade-in"><span>Financiamiento</span></div>
-  <div class="two-col fade-in mb-2">
-    <div class="card">
-      <h3>E1 — Total USD 5.194.805 (con IVA)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Fuente</th><th style="text-align:right;">Monto (USD)</th><th style="text-align:right;">%</th></tr></thead>
-          <tbody>
-            <tr><td>Aportes propios</td><td style="text-align:right;">$2.597.402</td><td style="text-align:right;">50%</td></tr>
-            <tr><td>Préstamo BICE (Comex)</td><td style="text-align:right;">$2.597.402</td><td style="text-align:right;">50%</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="card">
-      <h3>E2 — Total USD 4.376.918 (con IVA)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Fuente</th><th style="text-align:right;">Monto (USD)</th><th style="text-align:right;">%</th></tr></thead>
-          <tbody>
-            <tr><td>Aportes propios</td><td style="text-align:right;">$3.063.843</td><td style="text-align:right;">70%</td></tr>
-            <tr><td>Préstamo BICE (Comex)</td><td style="text-align:right;">$1.313.075</td><td style="text-align:right;">30%</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="highlight-box warn fade-in mb-2">
-    <strong>Condiciones del préstamo:</strong> Banco BICE · Línea Comex · TNA 8,5% en USD · Sistema alemán (cuota decreciente) · Plazo 7 años · 12 meses de gracia · TEM 0,71% · Cuota gracia USD 5.249/mes · Primera cuota amortización USD 15.518.
-  </div>
-
-  <div class="pill-divider fade-in"><span>OPEX — estructura de costos</span></div>
-  <div class="grid-4 fade-in mb-2">
-    <div class="kpi-card"><div class="kpi-value">23</div><div class="kpi-label">PUESTOS TOTALES</div></div>
-    <div class="kpi-card"><div class="kpi-value">$96.365</div><div class="kpi-label">COSTO RR.HH. / MES</div></div>
-    <div class="kpi-card"><div class="kpi-value">$1.203.114</div><div class="kpi-label">COSTO RR.HH. / AÑO</div></div>
-    <div class="kpi-card"><div class="kpi-value">$427.224</div><div class="kpi-label">M.O. DIRECTA / AÑO</div></div>
-  </div>
-  <div class="grid-2 fade-in mb-2">
-    <div class="card">
-      <h3>Costos variables (ambos escenarios)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Ítem</th><th style="text-align:right;">USD/año</th></tr></thead>
-          <tbody>
-            <tr><td>BOM — materia prima (puesto en Arg.)</td><td style="text-align:right;">$15.972.402</td></tr>
-            <tr><td>Costo BOM unitario</td><td style="text-align:right;">$16.466/u</td></tr>
-            <tr><td>Mano de obra directa</td><td style="text-align:right;">$427.224</td></tr>
-            <tr style="font-weight:700;"><td>Total costo variable</td><td style="text-align:right;">$16.399.626</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="small mt-1" style="color:var(--muted);">BOM incluye aranceles 13% + IVA 21%. Componentes críticos: controladora de vuelo ($3.080/u), sensores núcleo ($2.900/u), INS posicionamiento ($1.220/u), tanque spray ($1.400/u).</p>
-    </div>
-    <div class="card">
-      <h3>Costos fijos anuales por escenario</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Ítem</th><th style="text-align:right;">E1 — Compra</th><th style="text-align:right;">E2 — Alquiler</th></tr></thead>
-          <tbody>
-            <tr><td>Amortizaciones</td><td style="text-align:right;">$307.038</td><td style="text-align:right;">$292.302</td></tr>
-            <tr><td>Sueldos indirectos</td><td style="text-align:right;">$729.150</td><td style="text-align:right;">$729.150</td></tr>
-            <tr><td>Intereses préstamo</td><td style="text-align:right;">$591.837</td><td style="text-align:right;">$235.416</td></tr>
-            <tr><td>Servicios + seguros + varios</td><td style="text-align:right;">$184.050</td><td style="text-align:right;">$173.490</td></tr>
-            <tr style="font-weight:700;"><td>Total CF anual</td><td style="text-align:right;">$1.812.074</td><td style="text-align:right;">$1.430.358</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="small mt-1" style="color:var(--muted);">Servicios mensuales referencia: electricidad USD 3.466 · IT (fibra + cloud + licencias) USD 3.880 · gas USD 1.200 · agua USD 100. Consumo industrial: 700 kW/h × 30 días.</p>
+    <div class="bm-rail" aria-hidden="true"></div>
+    <div class="bm-node">
+      <strong>Recurrencia</strong>
+      <span>MRO, MaaS, capacitación, B2G — costos fijos ya cargan IT (fibra, cloud, licencias) y estructura indirecta.</span>
     </div>
   </div>
 
-  <div class="pill-divider fade-in"><span>Precio, margen e ingreso por volumen</span></div>
-  <div class="grid-2 fade-in mb-2">
-    <div class="card">
-      <h3>Benchmark competitivo (USD)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Competidor</th><th style="text-align:right;">Precio</th></tr></thead>
-          <tbody>
-            <tr><td>XAG P1000</td><td style="text-align:right;">$32.000</td></tr>
-            <tr><td>DJI Matrice 4T</td><td style="text-align:right;">$25.000</td></tr>
-            <tr><td>Skydio X10</td><td style="text-align:right;">$19.000</td></tr>
-            <tr><td>Parrot Anafi USA</td><td style="text-align:right;">$25.000</td></tr>
-            <tr><td>Freefly Astro</td><td style="text-align:right;">$32.000</td></tr>
-            <tr><td>Elios 3</td><td style="text-align:right;">$30.000</td></tr>
-            <tr><td>Voliro T</td><td style="text-align:right;">$30.000</td></tr>
-            <tr style="font-weight:700;"><td>Media del mercado</td><td style="text-align:right;">$27.571</td></tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="dash-kpi-strip fade-in">
+    <div class="dash-kpi"><div class="dv">20,80%</div><div class="dl">WACC</div></div>
+    <div class="dash-kpi"><div class="dv">USD 8,87M</div><div class="dl">VAN máx. (E2 · tomador)</div></div>
+    <div class="dash-kpi"><div class="dv">39,18%</div><div class="dl">TIR máx.</div></div>
+    <div class="dash-kpi"><div class="dv">2,52 a</div><div class="dl">Payback mín.</div></div>
+    <div class="dash-kpi"><div class="dv">163 u</div><div class="dl">Break-even / año</div></div>
+    <div class="dash-kpi"><div class="dv">USD 27.571</div><div class="dl">Precio tomador / u</div></div>
+  </div>
+
+  <div class="pill-divider fade-in"><span>Ingresos modelados — 970 u/año</span></div>
+  <div class="stream-grid fade-in">
+    <div class="stream-card">
+      <div class="st-title">Hardware · tomador</div>
+      <div class="st-val">USD 26.744.286</div>
+      <div class="st-note">Precio USD 27.571/u (= media de mercado). Margen bruto USD 11.105/u sobre costo USD 16.466/u.</div>
     </div>
-    <div class="card">
-      <h3>Estrategias Sentinel vs costo unitario</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Indicador</th><th style="text-align:right;">Tomador</th><th style="text-align:right;">Formador</th></tr></thead>
-          <tbody>
-            <tr><td>Precio de venta (USD/u)</td><td style="text-align:right;">$27.571</td><td style="text-align:right;">$26.000</td></tr>
-            <tr><td>Costo unitario (USD/u)</td><td style="text-align:right;">$16.466</td><td style="text-align:right;">$16.466</td></tr>
-            <tr><td>Margen bruto (USD/u)</td><td style="text-align:right;">$11.105</td><td style="text-align:right;">$9.534</td></tr>
-            <tr><td>Ingreso anual 970 u</td><td style="text-align:right;">$26.744.286</td><td style="text-align:right;">$25.220.000</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="small mt-1" style="color:var(--muted);">Tomador = media del mercado. Formador = −5,7% sobre la media.</p>
+    <div class="stream-card">
+      <div class="st-title">Hardware · formador</div>
+      <div class="st-val">USD 25.220.000</div>
+      <div class="st-note">Precio USD 26.000/u (−5,7% vs. media). Margen bruto USD 9.534/u.</div>
+    </div>
+    <div class="stream-card">
+      <div class="st-title">Sentinel Cloud</div>
+      <div class="st-val">SaaS USD</div>
+      <div class="st-note">Suscripción mensual en dólares, tiers por vertical. Ingreso recurrente modelado en el estudio como palanca de resiliencia junto al hardware.</div>
+    </div>
+    <div class="stream-card">
+      <div class="st-title">MaaS &amp; servicios</div>
+      <div class="st-val">Contrato</div>
+      <div class="st-note">Monitoring-as-a-Service y servicios asociados: menor barrera de entrada al activo; estructura de personal del resumen incluye MRO, logística y operaciones.</div>
     </div>
   </div>
 
-  <div class="pill-divider fade-in"><span>UEN — lectura de ingresos y costos</span></div>
+  <div class="dash-grid-2 fade-in">
+    <div class="chart-slot">
+      <div class="chart-ph-label">Visualización · composición CAPEX E1 (s/IVA)</div>
+      <h4>Rubros principales sobre USD 4.334.880</h4>
+      <div class="chart-bars" aria-label="Barras proporcionales: construcción 43,6%, maquinaria 27,4%, demás líneas 29,0%">
+        <div class="chart-bar" style="height:43.6%" title="Construcción USD 1.890.000"></div>
+        <div class="chart-bar" style="height:27.4%" title="Maquinaria USD 1.187.600"></div>
+        <div class="chart-bar" style="height:29.0%" title="Demás ítems declarados USD 1.257.280"></div>
+      </div>
+      <p class="small mt-1" style="color:rgba(238,243,255,0.45);margin:0.75rem 0 0;">Alturas proporcionales al peso de cada bloque sobre el total E1 del resumen (terreno, muebles, rodados y puesta en marcha agrupados).</p>
+    </div>
+    <div class="chart-slot">
+      <div class="chart-ph-label">Visualización · VAN por escenario (r = 20,80%)</div>
+      <h4>Cuatro variantes — escala relativa al máximo</h4>
+      <div class="chart-bars" style="gap:8px;" aria-label="VAN relativo: E1 tomador, E1 formador, E2 tomador, E2 formador">
+        <div class="chart-bar" style="height:91.7%" title="E1 tomador VAN USD 8.133.947"></div>
+        <div class="chart-bar" style="height:58.5%" title="E1 formador VAN USD 5.187.479"></div>
+        <div class="chart-bar" style="height:100%" title="E2 tomador VAN USD 8.874.886"></div>
+        <div class="chart-bar" style="height:54.3%" title="E2 formador VAN USD 4.821.081"></div>
+      </div>
+      <p class="small mt-1" style="color:rgba(238,243,255,0.45);margin:0.75rem 0 0;">Ilustrativo: barras normalizadas al VAN más alto (E2 · tomador). Cifras exactas en tarjetas y cajones de datos.</p>
+    </div>
+  </div>
+
+  <div class="split-capox fade-in">
+    <div class="capox">
+      <h4>CAPEX — inversión inicial</h4>
+      <div class="capox-bar-row">
+        <div class="capox-bar-meta"><span>E1 · Compra Maipú (s/IVA)</span><span>USD 4.334.880</span></div>
+        <div class="capox-track"><div class="capox-fill" style="width:100%"></div></div>
+      </div>
+      <div class="capox-bar-row">
+        <div class="capox-bar-meta"><span>E2 · Alquiler Cumbra (s/IVA)</span><span>USD 3.617.635</span></div>
+        <div class="capox-track"><div class="capox-fill green" style="width:83.43%"></div></div>
+      </div>
+      <p class="small mt-1" style="color:rgba(238,243,255,0.48);margin:0.85rem 0 0;">Con IVA: E1 USD 5.194.805 · E2 USD 4.376.918 · amort. anual E1 USD 307.038 · E2 USD 292.302.</p>
+    </div>
+    <div class="capox">
+      <h4>OPEX — referencia anual</h4>
+      <div class="capox-bar-row">
+        <div class="capox-bar-meta"><span>Costo variable total</span><span>USD 16.399.626</span></div>
+        <div class="capox-track"><div class="capox-fill" style="width:100%"></div></div>
+      </div>
+      <div class="capox-bar-row">
+        <div class="capox-bar-meta"><span>Costos fijos E1 (CF anual)</span><span>USD 1.812.074</span></div>
+        <div class="capox-track"><div class="capox-fill green" style="width:11.05%"></div></div>
+      </div>
+      <div class="capox-bar-row">
+        <div class="capox-bar-meta"><span>Costos fijos E2 (CF anual)</span><span>USD 1.430.358</span></div>
+        <div class="capox-track"><div class="capox-fill green" style="width:8.72%"></div></div>
+      </div>
+      <p class="small mt-1" style="color:rgba(238,243,255,0.48);margin:0.85rem 0 0;">Anchos de CF fijo vs. costo variable total del resumen. RR.HH.: 23 puestos · USD 96.365/mes · USD 1.203.114/año.</p>
+    </div>
+  </div>
+
+  <div class="pill-divider fade-in"><span>Escalabilidad &amp; operación nominal</span></div>
+  <div class="scale-strip fade-in">
+    <div class="scale-tile"><b>970</b><span>unidades / año</span></div>
+    <div class="scale-tile"><b>81</b><span>unidades / mes</span></div>
+    <div class="scale-tile"><b>4</b><span>unidades / día hábil</span></div>
+    <div class="scale-tile"><b>83,2%</b><span>margen de seguridad</span></div>
+    <div class="scale-tile"><b>7,69 a</b><span>vida útil eq. equipos</span></div>
+  </div>
+
+  <div class="pill-divider fade-in"><span>UEN — mapa de ingresos y costos</span></div>
   <div class="grid-3 fade-in mb-2">
     <div class="card">
       <span class="product-mini">UEN I · Planta</span>
       <h3>Drones ensamblados</h3>
-      <p class="small">Ingreso volumétrico modelado a 970 u/año con precio tomador o formador; costo variable dominado por BOM ($16.466/u) más MOD ($427.224/año).</p>
+      <p class="small">Ingreso volumétrico a 970 u/año (tomador / formador); CV dominado por BOM (USD 15.972.402 + MOD USD 427.224).</p>
     </div>
     <div class="card">
       <span class="product-mini">UEN II · Servicios</span>
       <h3>MRO · MaaS · capacitación</h3>
-      <p class="small">Estructura de personal incluye técnicos MRO, logística y operaciones; costos fijos incorporan servicios industriales y seguros según escenario.</p>
+      <p class="small">Personal técnico y operativo; costos fijos absorben servicios industriales y seguros según escenario.</p>
     </div>
     <div class="card">
-      <span class="product-mini">UEN III · Sentinel Cloud</span>
+      <span class="product-mini">UEN III · Cloud</span>
       <h3>SaaS y datos</h3>
-      <p class="small">Roles GIS e IT en plantilla; rubros de IT en costos fijos (fibra, cloud, licencias). El modelo dual hardware + SaaS se explicita en el estudio como palanca de resiliencia.</p>
+      <p class="small">GIS e IT en plantilla; rubros IT en CF (fibra, cloud, licencias). Modelo dual hardware + SaaS explícito en el resumen.</p>
     </div>
   </div>
+
+  <details class="data-drawer fade-in">
+    <summary>Tablas CAPEX · desglose completo</summary>
+    <div class="drawer-body">
+      <div class="grid-2" style="gap:1rem;">
+        <div class="scenario-card winner-risk">
+          <div class="scenario-title"><span class="tag tag-blue">E1</span> Compra Parque Industrial Maipú</div>
+          <div class="metric-row"><span class="metric-key">Total sin IVA</span><span class="metric-val">USD 4.334.880</span></div>
+          <div class="metric-row"><span class="metric-key">Total con IVA</span><span class="metric-val blue">USD 5.194.805</span></div>
+          <div class="metric-row"><span class="metric-key">Amortización anual</span><span class="metric-val">USD 307.038</span></div>
+        </div>
+        <div class="scenario-card winner">
+          <div class="scenario-title"><span class="tag tag-green">E2</span> Alquiler Nave Cumbra</div>
+          <div class="metric-row"><span class="metric-key">Total sin IVA</span><span class="metric-val">USD 3.617.635</span></div>
+          <div class="metric-row"><span class="metric-key">Total con IVA</span><span class="metric-val green">USD 4.376.918</span></div>
+          <div class="metric-row"><span class="metric-key">Amortización anual</span><span class="metric-val">USD 292.302</span></div>
+        </div>
+      </div>
+      <div class="grid-4 mt-1" style="margin-top:1rem;">
+        <div class="kpi-card"><div class="kpi-value">$1,89 M</div><div class="kpi-label">CONSTRUCCIÓN (E1)</div></div>
+        <div class="kpi-card"><div class="kpi-value">$1,28 M</div><div class="kpi-label">ADECUACIÓN (E2)</div></div>
+        <div class="kpi-card"><div class="kpi-value">$1,19 M</div><div class="kpi-label">MAQUINARIA Y EQUIPOS</div></div>
+        <div class="kpi-card"><div class="kpi-value">$250 K</div><div class="kpi-label">JAULA INDOOR (DESTACADO)</div></div>
+      </div>
+      <div class="table-wrap mt-1">
+        <table>
+          <thead>
+            <tr><th>Categoría</th><th class="td-right" style="text-align:right;">E1 — Compra (USD s/IVA)</th><th class="td-right" style="text-align:right;">E2 — Alquiler (USD s/IVA)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1. Terreno / Nave</td><td style="text-align:right;">$240.000</td><td style="text-align:right;">$2.000 (alquiler/mes)</td></tr>
+            <tr><td>2. Construcción (nave 800 m² + oficinas 500 m²)</td><td style="text-align:right;">$1.890.000</td><td style="text-align:right;">—</td></tr>
+            <tr><td>2b. Adecuación galpón (E2)</td><td style="text-align:right;">—</td><td style="text-align:right;">$1.281.100</td></tr>
+            <tr><td>3. Maquinaria y Equipos</td><td style="text-align:right;">$1.187.600</td><td style="text-align:right;">$1.187.600</td></tr>
+            <tr><td>4. Muebles y Útiles</td><td style="text-align:right;">$147.500</td><td style="text-align:right;">$147.500</td></tr>
+            <tr><td>5. Rodados</td><td style="text-align:right;">$190.000</td><td style="text-align:right;">$190.000</td></tr>
+            <tr><td>6. Puesta en Marcha</td><td style="text-align:right;">$178.140</td><td style="text-align:right;">$178.140</td></tr>
+            <tr style="font-weight:700;"><td>TOTAL INVERSIÓN</td><td style="text-align:right;">$4.334.880</td><td style="text-align:right;">$3.617.635</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight-box mt-1" style="margin-top:1rem;">
+        <strong>Equipamiento destacado:</strong> 4 brazos robóticos colaborativos ($161.200), jaula de vuelo indoor ($250.000), sistema de calibración IMU/brújula ($30.000), colimador/banco óptico ($50.000), infraestructura de red ($100.000). Vida útil promedio ponderada: 7,69 años.
+      </div>
+    </div>
+  </details>
+
+  <details class="data-drawer fade-in">
+    <summary>Financiamiento BICE Comex · condiciones</summary>
+    <div class="drawer-body">
+      <div class="two-col">
+        <div class="card">
+          <h3>E1 — Total USD 5.194.805 (con IVA)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Fuente</th><th style="text-align:right;">Monto (USD)</th><th style="text-align:right;">%</th></tr></thead>
+              <tbody>
+                <tr><td>Aportes propios</td><td style="text-align:right;">$2.597.402</td><td style="text-align:right;">50%</td></tr>
+                <tr><td>Préstamo BICE (Comex)</td><td style="text-align:right;">$2.597.402</td><td style="text-align:right;">50%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <h3>E2 — Total USD 4.376.918 (con IVA)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Fuente</th><th style="text-align:right;">Monto (USD)</th><th style="text-align:right;">%</th></tr></thead>
+              <tbody>
+                <tr><td>Aportes propios</td><td style="text-align:right;">$3.063.843</td><td style="text-align:right;">70%</td></tr>
+                <tr><td>Préstamo BICE (Comex)</td><td style="text-align:right;">$1.313.075</td><td style="text-align:right;">30%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="highlight-box warn mt-1" style="margin-top:1rem;">
+        <strong>Condiciones del préstamo:</strong> Banco BICE · Línea Comex · TNA 8,5% en USD · Sistema alemán (cuota decreciente) · Plazo 7 años · 12 meses de gracia · TEM 0,71% · Cuota gracia USD 5.249/mes · Primera cuota amortización USD 15.518.
+      </div>
+    </div>
+  </details>
+
+  <details class="data-drawer fade-in">
+    <summary>OPEX · variables y fijos por escenario</summary>
+    <div class="drawer-body">
+      <div class="grid-4 mb-1" style="margin-bottom:1rem;">
+        <div class="kpi-card"><div class="kpi-value">23</div><div class="kpi-label">PUESTOS TOTALES</div></div>
+        <div class="kpi-card"><div class="kpi-value">$96.365</div><div class="kpi-label">COSTO RR.HH. / MES</div></div>
+        <div class="kpi-card"><div class="kpi-value">$1.203.114</div><div class="kpi-label">COSTO RR.HH. / AÑO</div></div>
+        <div class="kpi-card"><div class="kpi-value">$427.224</div><div class="kpi-label">M.O. DIRECTA / AÑO</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Costos variables (ambos escenarios)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Ítem</th><th style="text-align:right;">USD/año</th></tr></thead>
+              <tbody>
+                <tr><td>BOM — materia prima (puesto en Arg.)</td><td style="text-align:right;">$15.972.402</td></tr>
+                <tr><td>Costo BOM unitario</td><td style="text-align:right;">$16.466/u</td></tr>
+                <tr><td>Mano de obra directa</td><td style="text-align:right;">$427.224</td></tr>
+                <tr style="font-weight:700;"><td>Total costo variable</td><td style="text-align:right;">$16.399.626</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="small mt-1" style="color:var(--muted);">BOM incluye aranceles 13% + IVA 21%. Componentes críticos: controladora de vuelo ($3.080/u), sensores núcleo ($2.900/u), INS posicionamiento ($1.220/u), tanque spray ($1.400/u).</p>
+        </div>
+        <div class="card">
+          <h3>Costos fijos anuales por escenario</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Ítem</th><th style="text-align:right;">E1 — Compra</th><th style="text-align:right;">E2 — Alquiler</th></tr></thead>
+              <tbody>
+                <tr><td>Amortizaciones</td><td style="text-align:right;">$307.038</td><td style="text-align:right;">$292.302</td></tr>
+                <tr><td>Sueldos indirectos</td><td style="text-align:right;">$729.150</td><td style="text-align:right;">$729.150</td></tr>
+                <tr><td>Intereses préstamo</td><td style="text-align:right;">$591.837</td><td style="text-align:right;">$235.416</td></tr>
+                <tr><td>Servicios + seguros + varios</td><td style="text-align:right;">$184.050</td><td style="text-align:right;">$173.490</td></tr>
+                <tr style="font-weight:700;"><td>Total CF anual</td><td style="text-align:right;">$1.812.074</td><td style="text-align:right;">$1.430.358</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="small mt-1" style="color:var(--muted);">Servicios mensuales referencia: electricidad USD 3.466 · IT (fibra + cloud + licencias) USD 3.880 · gas USD 1.200 · agua USD 100. Consumo industrial: 700 kW/h × 30 días.</p>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="data-drawer fade-in">
+    <summary>Precios · benchmark y estrategia tomador / formador</summary>
+    <div class="drawer-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Benchmark competitivo (USD)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Competidor</th><th style="text-align:right;">Precio</th></tr></thead>
+              <tbody>
+                <tr><td>XAG P1000</td><td style="text-align:right;">$32.000</td></tr>
+                <tr><td>DJI Matrice 4T</td><td style="text-align:right;">$25.000</td></tr>
+                <tr><td>Skydio X10</td><td style="text-align:right;">$19.000</td></tr>
+                <tr><td>Parrot Anafi USA</td><td style="text-align:right;">$25.000</td></tr>
+                <tr><td>Freefly Astro</td><td style="text-align:right;">$32.000</td></tr>
+                <tr><td>Elios 3</td><td style="text-align:right;">$30.000</td></tr>
+                <tr><td>Voliro T</td><td style="text-align:right;">$30.000</td></tr>
+                <tr style="font-weight:700;"><td>Media del mercado</td><td style="text-align:right;">$27.571</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Estrategias Sentinel vs costo unitario</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Indicador</th><th style="text-align:right;">Tomador</th><th style="text-align:right;">Formador</th></tr></thead>
+              <tbody>
+                <tr><td>Precio de venta (USD/u)</td><td style="text-align:right;">$27.571</td><td style="text-align:right;">$26.000</td></tr>
+                <tr><td>Costo unitario (USD/u)</td><td style="text-align:right;">$16.466</td><td style="text-align:right;">$16.466</td></tr>
+                <tr><td>Margen bruto (USD/u)</td><td style="text-align:right;">$11.105</td><td style="text-align:right;">$9.534</td></tr>
+                <tr><td>Ingreso anual 970 u</td><td style="text-align:right;">$26.744.286</td><td style="text-align:right;">$25.220.000</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="small mt-1" style="color:var(--muted);">Tomador = media del mercado. Formador = −5,7% sobre la media.</p>
+        </div>
+      </div>
+    </div>
+  </details>
 
   <div class="pill-divider fade-in"><span>WACC — CAPM 29/04/2026</span></div>
   <div class="grid-4 fade-in mb-2">
@@ -2017,42 +2609,46 @@
     <strong>Síntesis:</strong> los cuatro escenarios arrojan VAN positivo a 20,80%. Mayor VAN: <strong>E2 · tomador (USD 8.874.886)</strong>. Mayor TIR: <strong>39,18%</strong> (mismo binomio). E1 · tomador concentra el mayor flujo en el año 1 (USD 5.383.244) y payback 2,61 años.
   </div>
 
-  <div class="pill-divider fade-in"><span>Payback — flujo acumulado (tomador)</span></div>
-  <div class="scenario-grid fade-in">
-    <div class="scenario-card winner-risk">
-      <div class="scenario-title"><span class="tag tag-blue">E1</span> Recupero</div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Año</th><th style="text-align:right;">Flujo (USD)</th><th style="text-align:right;">Acumulado</th></tr></thead>
-          <tbody>
-            <tr><td>0</td><td style="text-align:right;">−14.035.987</td><td style="text-align:right;">−14.035.987</td></tr>
-            <tr><td>1</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−8.652.742</td></tr>
-            <tr><td>2</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−3.269.498</td></tr>
-            <tr style="font-weight:700;"><td>3</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">+2.113.746</td></tr>
-          </tbody>
-        </table>
+  <details class="data-drawer fade-in">
+    <summary>Payback — flujo acumulado (tomador)</summary>
+    <div class="drawer-body">
+      <div class="scenario-grid">
+        <div class="scenario-card winner-risk">
+          <div class="scenario-title"><span class="tag tag-blue">E1</span> Recupero</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Año</th><th style="text-align:right;">Flujo (USD)</th><th style="text-align:right;">Acumulado</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td style="text-align:right;">−14.035.987</td><td style="text-align:right;">−14.035.987</td></tr>
+                <tr><td>1</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−8.652.742</td></tr>
+                <tr><td>2</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−3.269.498</td></tr>
+                <tr style="font-weight:700;"><td>3</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">+2.113.746</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box success" style="margin-top:0.75rem;margin-bottom:0;">Payback: <strong>2,61 años</strong></div>
+        </div>
+        <div class="scenario-card winner">
+          <div class="scenario-title"><span class="tag tag-green">E2</span> Recupero</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Año</th><th style="text-align:right;">Flujo (USD)</th><th style="text-align:right;">Acumulado</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td style="text-align:right;">−13.161.137</td><td style="text-align:right;">−13.161.137</td></tr>
+                <tr><td>1</td><td style="text-align:right;">5.221.481</td><td style="text-align:right;">−7.939.657</td></tr>
+                <tr><td>2</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−2.556.413</td></tr>
+                <tr style="font-weight:700;"><td>3</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">+2.826.832</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box success" style="margin-top:0.75rem;margin-bottom:0;">Payback: <strong>2,52 años</strong></div>
+        </div>
       </div>
-      <div class="highlight-box success" style="margin-top:0.75rem;margin-bottom:0;">Payback: <strong>2,61 años</strong></div>
     </div>
-    <div class="scenario-card winner">
-      <div class="scenario-title"><span class="tag tag-green">E2</span> Recupero</div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Año</th><th style="text-align:right;">Flujo (USD)</th><th style="text-align:right;">Acumulado</th></tr></thead>
-          <tbody>
-            <tr><td>0</td><td style="text-align:right;">−13.161.137</td><td style="text-align:right;">−13.161.137</td></tr>
-            <tr><td>1</td><td style="text-align:right;">5.221.481</td><td style="text-align:right;">−7.939.657</td></tr>
-            <tr><td>2</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">−2.556.413</td></tr>
-            <tr style="font-weight:700;"><td>3</td><td style="text-align:right;">5.383.244</td><td style="text-align:right;">+2.826.832</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="highlight-box success" style="margin-top:0.75rem;margin-bottom:0;">Payback: <strong>2,52 años</strong></div>
-    </div>
-  </div>
+  </details>
 
-  <div class="highlight-box success fade-in mt-2">
-    <strong>Recomendación (resumen actualizado):</strong> el binomio <strong>E2 — Alquiler Cumbra + tomador de precio</strong> maximiza VAN (USD 8.874.886) y TIR (39,18%) con menor desembolso inicial (USD 13.161.137 vs. USD 14.035.987). <strong>E1 — Compra Maipú</strong> conviene si se prioriza activo patrimonial y predictibilidad de costos fijos a largo plazo.
+  <div class="fin-callout fade-in">
+    <p><strong>Recomendación (resumen actualizado):</strong> el binomio <strong>E2 — Alquiler Cumbra + tomador de precio</strong> maximiza VAN (USD 8.874.886) y TIR (39,18%) con menor desembolso inicial (USD 13.161.137 vs. USD 14.035.987). <strong>E1 — Compra Maipú</strong> conviene si se prioriza activo patrimonial y predictibilidad de costos fijos a largo plazo.</p>
   </div>
 </section>
 
@@ -2412,15 +3008,27 @@
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
 
-  window.addEventListener('scroll', () => {
+  const scrollProgress = document.getElementById('scrollProgress');
+
+  function updateScrollUI() {
+    const docEl = document.documentElement;
+    const scrollTop = window.scrollY || docEl.scrollTop;
+    const maxScroll = Math.max(1, docEl.scrollHeight - docEl.clientHeight);
+    const pct = Math.min(100, Math.max(0, (scrollTop / maxScroll) * 100));
+    if (scrollProgress) scrollProgress.style.width = pct + '%';
+
     let current = '';
     sections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+      if (scrollTop >= s.offsetTop - 100) current = s.id;
     });
     navLinks.forEach(a => {
       a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
     });
-  });
+  }
+
+  window.addEventListener('scroll', updateScrollUI, { passive: true });
+  window.addEventListener('resize', updateScrollUI, { passive: true });
+  updateScrollUI();
 </script>
 </body>
 </html>
