@@ -1484,6 +1484,313 @@
   .chart-canvas-wrap.chart-canvas--wide {
     height: 280px;
   }
+
+  #hero.hero-pro {
+    padding-top: 6.5rem;
+    padding-bottom: clamp(4rem, 12vh, 6rem);
+    min-height: min(100vh, 960px);
+    border: 1px solid rgba(59,138,255,0.12);
+    border-radius: 24px;
+    margin-top: 1rem;
+    margin-left: clamp(0.5rem, 2vw, 1.5rem);
+    margin-right: clamp(0.5rem, 2vw, 1.5rem);
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(59,138,255,0.14), transparent 55%),
+      linear-gradient(165deg, rgba(6,16,32,0.55), rgba(2,5,8,0.2));
+    box-shadow: 0 40px 120px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px);
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(34,232,255,0.85);
+    margin-bottom: 1rem;
+    animation: fadeUp 0.55s ease both;
+  }
+
+  .hero-headline-row {
+    display: grid;
+    gap: 1.5rem;
+    align-items: end;
+    max-width: min(1100px, 100%);
+  }
+
+  @media (min-width: 960px) {
+    .hero-headline-row {
+      grid-template-columns: 1fr minmax(200px, 32%);
+    }
+  }
+
+  #hero.hero-pro .hero-title {
+    max-width: min(22ch, 100%);
+  }
+
+  .hero-deco {
+    position: relative;
+    min-height: 120px;
+    border: 1px solid rgba(59,138,255,0.2);
+    border-radius: 16px;
+    background: radial-gradient(circle at 50% 50%, rgba(34,232,255,0.08), transparent 65%);
+    overflow: hidden;
+  }
+
+  .hero-deco::before,
+  .hero-deco::after {
+    content: '';
+    position: absolute;
+    border: 1px solid rgba(59,138,255,0.18);
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-deco::before { width: 180px; height: 180px; opacity: 0.7; animation: heroOrbit 22s linear infinite; }
+  .hero-deco::after { width: 110px; height: 110px; opacity: 0.45; animation: heroOrbit 16s linear infinite reverse; }
+
+  @keyframes heroOrbit {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .hero-lede { margin-top: 1.25rem; max-width: 52ch; }
+  .hero-tagline { max-width: 52ch; margin-top: 1rem; }
+
+  .story-arc {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .story-pillar {
+    border-radius: 18px;
+    border: 1px solid rgba(59,138,255,0.16);
+    background: linear-gradient(160deg, rgba(8,24,52,0.55), rgba(2,5,8,0.35));
+    padding: 1.5rem 1.45rem 1.6rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  }
+
+  .story-pillar:hover {
+    transform: translateY(-4px);
+    border-color: rgba(34,232,255,0.32);
+    box-shadow: 0 22px 56px rgba(0,0,0,0.35);
+  }
+
+  .story-pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--grad);
+    opacity: 0.85;
+  }
+
+  .story-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--cyan);
+    margin-bottom: 0.85rem;
+  }
+
+  .story-pillar p {
+    font-size: 0.86rem;
+    color: rgba(238,243,255,0.72);
+    margin-bottom: 0.75rem;
+    max-width: none;
+  }
+
+  .story-pillar p:last-child { margin-bottom: 0; }
+
+  .eco-chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.35rem;
+    margin: 2rem 0 2.25rem;
+    padding: 1.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(59,138,255,0.15);
+    background: linear-gradient(180deg, rgba(10,30,60,0.35), rgba(2,5,8,0.15));
+  }
+
+  .eco-node {
+    flex: 1 1 200px;
+    max-width: 340px;
+    text-align: center;
+    padding: 1.1rem 0.85rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.25);
+    transition: border-color 0.22s, transform 0.22s;
+  }
+
+  .eco-node:hover {
+    border-color: rgba(34,232,255,0.35);
+    transform: translateY(-2px);
+  }
+
+  .eco-node .sym {
+    font-size: 1.6rem;
+    display: block;
+    margin-bottom: 0.4rem;
+    filter: drop-shadow(0 0 12px rgba(34,232,255,0.25));
+  }
+
+  .eco-node strong {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .eco-node p {
+    font-size: 0.72rem;
+    color: rgba(238,243,255,0.55);
+    line-height: 1.45;
+  }
+
+  .eco-node span {
+    font-size: 0.72rem;
+    color: rgba(238,243,255,0.5);
+    line-height: 1.4;
+  }
+
+  .eco-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: rgba(34,232,255,0.55);
+    padding: 0 0.15rem;
+    flex: 0 0 auto;
+    align-self: center;
+  }
+
+  @media (max-width: 700px) {
+    .eco-link { transform: rotate(90deg); padding: 0.5rem 0; }
+  }
+
+  .flow-strip.flow-pipeline {
+    position: relative;
+    padding: 0.5rem 0;
+  }
+
+  .flow-strip.flow-pipeline .flow-item:not(:last-child)::after {
+    display: block;
+    content: '›';
+    right: -6px;
+    width: auto;
+    height: auto;
+    background: none;
+    opacity: 0.9;
+    color: var(--cyan);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .loc-optimal-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    text-align: center;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    border-radius: 16px;
+    border: 1px solid rgba(0,240,181,0.35);
+    background: linear-gradient(120deg, rgba(0,240,181,0.12), rgba(59,138,255,0.08));
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    box-shadow: 0 0 48px rgba(0,240,181,0.08);
+  }
+
+  .loc-optimal-banner span.mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    color: rgba(34,232,255,0.9);
+    text-transform: uppercase;
+  }
+
+  .table-loc-macro tbody td.td-sc {
+    vertical-align: middle;
+    min-width: 6.5rem;
+  }
+
+  .td-sc-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .td-sc-bar {
+    height: 6px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+
+  .td-sc-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--grad);
+    transition: width 0.6s ease;
+  }
+
+  .row-winner .td-sc-fill {
+    background: linear-gradient(90deg, rgba(0,240,181,0.95), rgba(34,232,255,0.55));
+  }
+
+  .td-sc-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: rgba(238,243,255,0.88);
+  }
+
+  .table-loc-macro thead th {
+    position: sticky;
+    top: 58px;
+    z-index: 2;
+  }
+
+  #conclusion.conclusion-pro .conclusion-box {
+    border-radius: 24px;
+    border: 1px solid rgba(59,138,255,0.28);
+    box-shadow: 0 0 0 1px rgba(34,232,255,0.06), 0 32px 80px rgba(0,0,0,0.4);
+    padding: clamp(2.5rem, 6vw, 3.75rem);
+  }
+
+  .conclusion-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  #conclusion.conclusion-pro .conclusion-verdict {
+    font-size: clamp(2.25rem, 6vw, 4rem);
+    letter-spacing: -0.04em;
+  }
+
+  #conclusion.conclusion-pro .conclusion-kpi-row .kpi-card {
+    border-color: rgba(59,138,255,0.22);
+  }
 </style>
 </head>
 <body class="sentinel-site">
@@ -1494,6 +1801,8 @@
 <nav>
   <div class="nav-logo">SENTINEL ⬡ STRATOS</div>
   <div class="nav-links">
+    <a href="#hero">Inicio</a>
+    <a href="#narrativa">Historia</a>
     <a href="#overview">Visión</a>
     <a href="#uen">UEN</a>
     <a href="#exec">Resumen</a>
@@ -1513,9 +1822,15 @@
 <!-- ═══════════════════════════════════════════════ -->
 <!-- 1. HERO -->
 <!-- ═══════════════════════════════════════════════ -->
-<section id="hero" style="padding-left:2rem;padding-right:2rem;">
+<section id="hero" class="hero-pro" style="padding-left:clamp(1rem,3vw,2rem);padding-right:clamp(1rem,3vw,2rem);">
   <div class="hero-badge"><span></span> PROYECTO FINAL · INGENIERÍA INDUSTRIAL · UTN FRSR 2025</div>
-  <h1 class="hero-title">Planta + nube para monitoreo ambiental en serio<br><span class="accent">SENTINEL</span> <span style="-webkit-text-fill-color:var(--white);">STRATOS</span></h1>
+  <p class="hero-eyebrow">Deep-tech industrial · Mendoza · CKD/SKD + Sentinel Cloud</p>
+  <div class="hero-headline-row">
+    <div>
+      <h1 class="hero-title">Planta + nube para monitoreo ambiental en serio<br><span class="accent">SENTINEL</span> <span style="-webkit-text-fill-color:var(--white);">STRATOS</span></h1>
+    </div>
+    <div class="hero-deco" aria-hidden="true" title=""></div>
+  </div>
   <p class="hero-lede">Hub regional de ensamble e integración de VANT con despegue vertical: misión ambiental, datos accionables y operación sostenida en el territorio.</p>
   <p class="hero-tagline">Una sola plataforma física, <strong>configuración por software</strong> y servicios recurrentes. Menos latencia que el satélite, más alcance que el sensor puntual, con respaldo local.</p>
 
@@ -1559,6 +1874,33 @@
       <div class="kpi-value">163 u.</div>
       <div class="kpi-label">PUNTO DE EQUILIBRIO / AÑO</div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 1a. STORY ARC (additive — full excerpts from study) -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="narrativa">
+  <div class="sec-label fade-in">Arco narrativo</div>
+  <h2 class="fade-in">Antes del detalle técnico: por qué existe Sentinel</h2>
+  <p class="lede fade-in">Los bloques siguientes repiten <strong>texto ya desarrollado</strong> en el documento (Resumen ejecutivo y Problema &amp; Oportunidad), presentado aquí como hilo conductor sin sustituir las secciones completas posteriores.</p>
+
+  <div class="story-arc fade-in">
+    <article class="story-pillar">
+      <div class="story-kicker">THE PROBLEM</div>
+      <p>Argentina pierde miles de hectáreas por incendios forestales cada año. Las soluciones actuales —satélites, sensores IoT, drones genéricos— son lentas, costosas o no están integradas con soporte local.</p>
+      <p>Los incendios forestales escalan por falta de detección temprana. Argentina no tiene infraestructura tecnológica integrada para respuesta rápida. Las soluciones existentes tienen una o más fallas críticas.</p>
+    </article>
+    <article class="story-pillar">
+      <div class="story-kicker">THE SHIFT</div>
+      <p>Existe un nicho regional insatisfecho: organizaciones que necesitan soluciones de monitoreo aéreo con soporte local, precios competitivos y plataforma de datos integrada.</p>
+      <p>La urgencia ambiental crea una ventana de entrada única. Argentina necesita soluciones nacionales, y el ecosistema de talento de Mendoza (UTN, UNCuyo, IES) permite construirlas localmente.</p>
+    </article>
+    <article class="story-pillar">
+      <div class="story-kicker">THE SOLUTION</div>
+      <p>Sentinel integra hardware aeroespacial (drones VTOL) con software inteligente (Sentinel Cloud) para detección temprana de incendios, monitoreo ambiental y gestión agrícola. Un solo activo, múltiples verticales.</p>
+      <p>Hardware + SaaS. Venta directa del dron más suscripción recurrente a la plataforma. Reducción de riesgo por doble fuente de ingresos. Módulos activables: FireWatch, Agro-Scan, Livestock.</p>
+    </article>
   </div>
 </section>
 
@@ -1734,6 +2076,34 @@
 <section id="solucion">
   <div class="sec-label">03 — La Solución Sentinel</div>
   <h2>Tres capas, un ecosistema</h2>
+
+  <div class="eco-chain fade-in" aria-label="Cadena de valor operativa">
+    <div class="eco-node">
+      <span class="sym" aria-hidden="true">🛸</span>
+      <strong>Drone</strong>
+      <p class="small" style="margin:0.35rem 0 0;color:rgba(238,243,255,0.62);line-height:1.45;">Dron VTOL modular ensamblado en Mendoza. Arquitectura de precisión aeroespacial con componentes OEM de primer nivel.</p>
+      <p class="small" style="margin:0.5rem 0 0;color:rgba(238,243,255,0.62);line-height:1.45;">4 motores T-Motor + hélices plegables. Controladora de vuelo CubePilot. 2 módulos GPS RTK de alta precisión. Radar anticolisión + seguimiento de terreno. Chasis de fibra de carbono (Carbon Group). Sensor térmico FLIR integrable. Módulo de cómputo NVIDIA embarcado. Batería LiPo/Li-Ion 13-14S con BMS.</p>
+    </div>
+    <span class="eco-link" aria-hidden="true">→</span>
+    <div class="eco-node">
+      <span class="sym" aria-hidden="true">◈</span>
+      <strong>IA</strong>
+      <p class="small" style="margin:0.35rem 0 0;color:rgba(238,243,255,0.62);line-height:1.45;">Inferencia en borde para detección temprana, priorización de alertas y mitigación de falsos positivos cuando el enlace es limitado.</p>
+    </div>
+    <span class="eco-link" aria-hidden="true">→</span>
+    <div class="eco-node">
+      <span class="sym" aria-hidden="true">☁</span>
+      <strong>Cloud</strong>
+      <p class="small" style="margin:0.35rem 0 0;color:rgba(238,243,255,0.62);line-height:1.45;">Plataforma SaaS multivertical con IA embarcada y análisis de datos en tiempo real. Interfaz web + dashboard + alertas automáticas.</p>
+      <p class="small" style="margin:0.5rem 0 0;color:rgba(238,243,255,0.62);line-height:1.45;">IA embarcada para detección de focos térmicos. Alertas en tiempo real por umbral configurable. Dashboard de análisis multiespectral. Historial y reportes descargables. Integración con sistemas SCADA / ERP. API abierta para organismos gubernamentales.</p>
+    </div>
+    <span class="eco-link" aria-hidden="true">→</span>
+    <div class="eco-node">
+      <span class="sym" aria-hidden="true">⚡</span>
+      <strong>Response</strong>
+      <p class="small" style="margin:0.35rem 0 0;color:rgba(238,243,255,0.62);line-height:1.45;">Modelo as-a-Service para clientes que prefieren no comprar el activo. Soporte técnico localizado, capacitación y mantenimiento. MaaS (Monitoring-as-a-Service): vuelo + datos + reporte. Mantenimiento preventivo y correctivo en Mendoza. Capacitación de operadores en sitio. Soporte técnico con Time-to-Solve &lt; 24h. Actualizaciones de firmware y plataforma. Repuestos en stock con sistema SIRA activo.</p>
+    </div>
+  </div>
 
   <div class="grid-3 fade-in">
     <!-- HARDWARE -->
@@ -2051,8 +2421,9 @@
   <p class="lede fade-in">Dos decisiones encadenadas: región óptima vía factores ponderados y, dentro de Gran Mendoza, el sitio que mejor equilibra permisos, servicios y adecuación UAV.</p>
 
   <div class="winner-pill fade-in">Resultado macrolocalización — Gran Mendoza</div>
+  <div class="loc-optimal-banner fade-in"><span class="mono">Conclusión macrolocalización</span> Mendoza seleccionada como ubicación óptima</div>
   <div class="table-wrap fade-in mb-2">
-    <table>
+    <table class="table-loc-macro">
       <thead>
         <tr>
           <th>Factor (ponderación)</th>
@@ -2064,63 +2435,63 @@
       <tbody>
         <tr>
           <td>Demanda y proximidad a clientes (0,20)</td>
-          <td>8</td>
-          <td>6</td>
-          <td>7</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">8</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:80%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
         </tr>
         <tr>
           <td>Espacio aéreo y pruebas (0,15)</td>
-          <td>7</td>
-          <td>8</td>
-          <td>9</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">8</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:80%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">9</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:90%"></div></div></div></td>
         </tr>
         <tr>
           <td>Ecosistema y talento (0,15)</td>
-          <td>8</td>
-          <td>6</td>
-          <td>6</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">8</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:80%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
         </tr>
         <tr>
           <td>Logística y conectividad (0,10)</td>
-          <td>8</td>
-          <td>7</td>
-          <td>6</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">8</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:80%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
         </tr>
         <tr>
           <td>Costos operativos (0,10)</td>
-          <td>6</td>
-          <td>7</td>
-          <td>7</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
         </tr>
         <tr>
           <td>Servicios críticos (0,10)</td>
-          <td>8</td>
-          <td>6</td>
-          <td>6</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">8</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:80%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
         </tr>
         <tr>
           <td>Clima para pruebas (0,10)</td>
-          <td>7</td>
-          <td>7</td>
-          <td>6</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
         </tr>
         <tr>
           <td>Apoyo público / regulatorio (0,05)</td>
-          <td>7</td>
-          <td>6</td>
-          <td>8</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:60%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">8</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:80%"></div></div></div></td>
         </tr>
         <tr>
           <td>Seguridad y riesgo (0,05)</td>
-          <td>7</td>
-          <td>7</td>
-          <td>7</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">7</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:70%"></div></div></div></td>
         </tr>
         <tr class="row-winner">
           <td><strong>Total ponderado (1,00)</strong></td>
-          <td><strong>7,45</strong></td>
-          <td>6,65</td>
-          <td>6,90</td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num"><strong>7,45</strong></span><div class="td-sc-bar"><div class="td-sc-fill" style="width:74.5%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6,65</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:66.5%"></div></div></div></td>
+          <td class="td-sc"><div class="td-sc-inner"><span class="td-sc-num">6,90</span><div class="td-sc-bar"><div class="td-sc-fill" style="width:69%"></div></div></div></td>
         </tr>
       </tbody>
     </table>
@@ -2194,7 +2565,7 @@
   <h2>Del kit importado al dron listo para misión</h2>
   <p class="lede fade-in">Cadena pensada para CKD/SKD: controlar entrada de insumos, estandarizar integración y cerrar con evidencia de calidad antes del despacho.</p>
 
-  <div class="flow-strip fade-in">
+  <div class="flow-strip flow-pipeline fade-in">
     <div class="flow-item">
       <div class="flow-n">01</div>
       <div class="flow-t">Recepción CKD/SKD</div>
@@ -2371,6 +2742,17 @@
       <div class="st-title">MaaS &amp; servicios</div>
       <div class="st-val">Contrato</div>
       <div class="st-note">Monitoring-as-a-Service y servicios asociados: menor barrera de entrada al activo; estructura de personal del resumen incluye MRO, logística y operaciones.</div>
+    </div>
+  </div>
+
+  <div class="chart-analytics-grid fade-in">
+    <div class="chart-js-panel">
+      <div class="chart-ph-label">Chart.js · torta</div>
+      <h4>Ingresos anuales modelados por palanca (970 u · tomador + mix)</h4>
+      <div class="chart-canvas-wrap">
+        <canvas id="chartIngresosPie" aria-label="Gráfico torta ingresos"></canvas>
+      </div>
+      <p class="chart-note">Hardware = USD 26.744.286 (970 u × USD 27.571/u, resumen). Participaciones servicios y cloud ilustrativas coherentes con modelo dual documentado.</p>
     </div>
   </div>
 
@@ -3027,9 +3409,9 @@
 <!-- ═══════════════════════════════════════════════ -->
 <!-- 17. CONCLUSIÓN FINAL -->
 <!-- ═══════════════════════════════════════════════ -->
-<section id="conclusion">
-  <div class="sec-label">16 — Conclusión Final</div>
-  <h2>El veredicto</h2>
+<section id="conclusion" class="conclusion-pro">
+  <div class="sec-label fade-in">16 — Conclusión Final</div>
+  <h2 class="fade-in">El veredicto</h2>
 
   <div class="conclusion-box fade-in">
     <div class="conclusion-verdict">SENTINEL ES VIABLE</div>
@@ -3040,7 +3422,7 @@
       VAN máximo <strong>USD 8.874.886</strong> (E2 · tomador), TIR máxima <strong>39,18%</strong>, payback mínimo <strong>2,52 años</strong> y punto de equilibrio <strong>163 u/año</strong> (16,8% de capacidad). La escalabilidad llega por servicios y licencias; la diferenciación, por IA y nube operativa.
     </p>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;max-width:800px;margin:0 auto;position:relative;">
+    <div class="conclusion-kpi-row fade-in">
       <div class="kpi-card">
         <div class="kpi-value">USD 8,87M</div>
         <div class="kpi-label">VAN MÁX. (RESUMEN)</div>
@@ -3236,6 +3618,48 @@
                   const t = c.dataset.data.reduce((a, b) => a + b, 0);
                   const pct = ((c.parsed / t) * 100).toFixed(1);
                   return c.label + ': ' + fmtUSD(c.parsed) + ' (' + pct + '%)';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    const ingPieEl = document.getElementById('chartIngresosPie');
+    if (ingPieEl) {
+      const hwi = 26744286;
+      const svi = 2400000;
+      const cli = 1400000;
+      new Chart(ingPieEl.getContext('2d'), {
+        type: 'pie',
+        data: {
+          labels: ['Venta de drones (970 u · tomador)', 'Servicios (ilustr.)', 'Sentinel Cloud (ilustr.)'],
+          datasets: [{
+            data: [hwi, svi, cli],
+            backgroundColor: [
+              'rgba(59,138,255,0.88)',
+              'rgba(34,232,255,0.72)',
+              'rgba(0,240,181,0.62)'
+            ],
+            borderColor: 'rgba(2,5,8,0.9)',
+            borderWidth: 2,
+            hoverOffset: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: tickCol, boxWidth: 12, padding: 12, font: { size: 11 } }
+            },
+            tooltip: {
+              callbacks: {
+                label: (c) => {
+                  const vals = [hwi, svi, cli];
+                  return c.label + ': ' + fmtUSD(vals[c.dataIndex]);
                 }
               }
             }
