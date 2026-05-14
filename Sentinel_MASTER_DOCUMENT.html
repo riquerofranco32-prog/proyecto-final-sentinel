@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel — Plataforma VTOL, IA y Sentinel Cloud</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #040d1f;
+    --deep: #071428;
+    --blue: #0d2a5c;
+    --mid: #1a4a9c;
+    --accent: #2b7fff;
+    --cyan: #00d4ff;
+    --white: #f0f4ff;
+    --muted: #8ba3cc;
+    --border: rgba(43,127,255,0.18);
+    --glass: rgba(13,42,92,0.45);
+    --success: #00e5a0;
+    --warn: #ff9500;
+    --danger: #ff3b5c;
+    --grad: linear-gradient(135deg, #2b7fff 0%, #00d4ff 100%);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID NOISE BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(43,127,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43,127,255,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(4,13,31,0.88);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    gap: 1rem;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: nowrap;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--accent);
+    background: rgba(43,127,255,0.1);
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  section + section {
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── SECTION LABELS ── */
+  .sec-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .sec-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  /* ── HEADINGS ── */
+  h1, h2, h3 { font-family: 'Syne', sans-serif; }
+
+  h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--white);
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 7rem;
+    padding-bottom: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(43,127,255,0.12);
+    border: 1px solid rgba(43,127,255,0.35);
+    border-radius: 999px;
+    padding: 0.3rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+    width: fit-content;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-badge span {
+    width: 6px; height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero-title .accent {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-tagline {
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
+    color: var(--muted);
+    font-weight: 300;
+    margin-top: 1rem;
+    max-width: 600px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-tagline strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .hero-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-top: 3rem;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .kpi-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, border-color 0.25s;
+  }
+
+  .kpi-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(43,127,255,0.4);
+  }
+
+  .kpi-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--grad);
+    border-radius: 12px 12px 0 0;
+  }
+
+  .kpi-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .kpi-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+    transition: transform 0.25s, border-color 0.25s;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(43,127,255,0.35);
+  }
+
+  .card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  /* ── GRIDS ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; }
+
+  /* ── TAGS ── */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    border: 1px solid;
+  }
+
+  .tag-blue { background: rgba(43,127,255,0.12); border-color: rgba(43,127,255,0.4); color: #7fb8ff; }
+  .tag-green { background: rgba(0,229,160,0.1); border-color: rgba(0,229,160,0.4); color: #00e5a0; }
+  .tag-orange { background: rgba(255,149,0,0.1); border-color: rgba(255,149,0,0.4); color: #ff9500; }
+  .tag-red { background: rgba(255,59,92,0.1); border-color: rgba(255,59,92,0.4); color: #ff3b5c; }
+  .tag-cyan { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.4); color: #00d4ff; }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    border-left: 3px solid var(--accent);
+    background: rgba(43,127,255,0.06);
+    padding: 1rem 1.25rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1.25rem 0;
+  }
+
+  .highlight-box.success { border-left-color: var(--success); background: rgba(0,229,160,0.06); }
+  .highlight-box.warn { border-left-color: var(--warn); background: rgba(255,149,0,0.06); }
+  .highlight-box.danger { border-left-color: var(--danger); background: rgba(255,59,92,0.06); }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+  }
+
+  thead th {
+    background: rgba(13,42,92,0.8);
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-top: 1px solid rgba(43,127,255,0.08);
+    transition: background 0.15s;
+  }
+
+  tbody tr:hover { background: rgba(43,127,255,0.05); }
+
+  tbody td {
+    padding: 0.85rem 1rem;
+    color: var(--white);
+    vertical-align: top;
+  }
+
+  tbody td:first-child { font-weight: 500; }
+
+  /* ── PROCESS STEPS ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+
+  .step {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 0.85rem 0;
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    background: var(--blue);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--accent);
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-content h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+
+  .step-content p {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ── METRIC BARS ── */
+  .bar-row {
+    margin-bottom: 1rem;
+  }
+
+  .bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.35rem;
+    font-size: 0.82rem;
+  }
+
+  .bar-track {
+    height: 6px;
+    background: rgba(43,127,255,0.12);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--grad);
+    transition: width 1s ease;
+  }
+
+  /* ── SCENARIO COMPARE ── */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 640px) {
+    .scenario-grid { grid-template-columns: 1fr; }
+    nav { display: none; }
+  }
+
+  .scenario-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .scenario-card.winner {
+    border-color: rgba(0,229,160,0.4);
+    background: rgba(0,229,160,0.04);
+  }
+
+  .scenario-card.winner-risk {
+    border-color: rgba(43,127,255,0.4);
+    background: rgba(43,127,255,0.04);
+  }
+
+  .scenario-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.83rem;
+  }
+
+  .metric-row:last-child { border-bottom: none; }
+
+  .metric-key { color: var(--muted); }
+  .metric-val {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .metric-val.green { color: var(--success); }
+  .metric-val.blue { color: var(--accent); }
+
+  /* ── RISK MATRIX ── */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .risk-item {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    border-left: 3px solid;
+  }
+
+  .risk-item.alto { border-left-color: var(--danger); }
+  .risk-item.medio { border-left-color: var(--warn); }
+  .risk-item.bajo { border-left-color: var(--success); }
+
+  .risk-level {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .risk-item.alto .risk-level { color: var(--danger); }
+  .risk-item.medio .risk-level { color: var(--warn); }
+  .risk-item.bajo .risk-level { color: var(--success); }
+
+  /* ── TORNADO CHART ── */
+  .tornado {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+
+  .tornado-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .tornado-label {
+    width: 130px;
+    flex-shrink: 0;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+  }
+
+  .tornado-bar-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tornado-bar {
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .tornado-pos {
+    background: linear-gradient(90deg, rgba(43,127,255,0.6), rgba(0,212,255,0.6));
+    color: var(--white);
+  }
+
+  .tornado-neg {
+    background: linear-gradient(90deg, rgba(255,59,92,0.6), rgba(255,100,50,0.4));
+    color: var(--white);
+  }
+
+  /* ── VERTICAL CARDS (solution) ── */
+  .vertical-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, border-color 0.25s;
+  }
+
+  .vertical-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(43,127,255,0.4);
+  }
+
+  .vertical-card::before {
+    content: attr(data-glyph);
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 5rem;
+    opacity: 0.05;
+    line-height: 1;
+  }
+
+  /* ── PILL DIVIDER ── */
+  .pill-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0 2rem;
+  }
+
+  .pill-divider span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    background: rgba(43,127,255,0.1);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem 0.85rem;
+  }
+
+  .pill-divider::before, .pill-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── CONCLUSION HERO ── */
+  .conclusion-box {
+    background: linear-gradient(135deg, rgba(43,127,255,0.12) 0%, rgba(0,212,255,0.06) 100%);
+    border: 1px solid rgba(43,127,255,0.35);
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .conclusion-box::before {
+    content: 'VIABLE';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Syne', sans-serif;
+    font-size: 10rem;
+    font-weight: 800;
+    color: rgba(43,127,255,0.04);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .conclusion-verdict {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── UTILITY ── */
+  p { color: rgba(240,244,255,0.75); font-size: 0.88rem; line-height: 1.7; margin-bottom: 0.75rem; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--white); font-weight: 500; }
+  ul { list-style: none; padding: 0; }
+  li { padding: 0.35rem 0; padding-left: 1rem; position: relative; font-size: 0.86rem; color: rgba(240,244,255,0.75); }
+  li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.75rem; top: 0.42rem; }
+
+  .text-accent { color: var(--accent); }
+  .text-cyan { color: var(--cyan); }
+  .text-green { color: var(--success); }
+  .mb-1 { margin-bottom: 1rem; }
+  .mb-2 { margin-bottom: 2rem; }
+  .mt-1 { margin-top: 1rem; }
+  .mt-2 { margin-top: 2rem; }
+  .small { font-size: 0.78rem; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+    .scenario-grid { grid-template-columns: 1fr; }
+    section { padding: 3.5rem 1.25rem; }
+    .hero-title { font-size: 2.5rem; }
+  }
+
+  /* ── OVERVIEW / FLOW / UEN ── */
+  .hero-lede {
+    font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+    color: rgba(240,244,255,0.88);
+    font-weight: 400;
+    max-width: 720px;
+    margin-top: 0.5rem;
+    line-height: 1.55;
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+
+  .hero-kpis-primary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.85rem;
+    margin-top: 2.25rem;
+    animation: fadeUp 0.6s 0.22s ease both;
+  }
+
+  .hero-kpis-secondary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.85rem;
+    margin-top: 1rem;
+    opacity: 0.95;
+    animation: fadeUp 0.6s 0.28s ease both;
+  }
+
+  .kpi-pill {
+    text-align: center;
+    padding: 1rem 1rem 1.1rem;
+  }
+
+  .kpi-pill .kpi-value {
+    font-size: 1.35rem;
+    letter-spacing: 0.04em;
+  }
+
+  .kpi-pill .kpi-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+
+  .lede {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 780px;
+    margin-bottom: 1.5rem;
+  }
+
+  .flow-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.65rem;
+    margin: 1.75rem 0 2rem;
+  }
+
+  .flow-item {
+    background: rgba(13,42,92,0.35);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 0.85rem;
+    text-align: center;
+    position: relative;
+    transition: transform 0.22s, border-color 0.22s, box-shadow 0.22s;
+  }
+
+  .flow-item:hover {
+    transform: translateY(-3px);
+    border-color: rgba(0,212,255,0.35);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  }
+
+  .flow-item::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    width: 10px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0.35;
+    transform: translateY(-50%);
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .flow-item:not(:last-child)::after { display: block; }
+  }
+
+  .flow-n {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--cyan);
+    letter-spacing: 0.14em;
+    margin-bottom: 0.35rem;
+  }
+
+  .flow-t {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--white);
+    line-height: 1.25;
+  }
+
+  .flow-d {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.35rem;
+    line-height: 1.45;
+  }
+
+  .winner-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--success);
+    border: 1px solid rgba(0,229,160,0.35);
+    background: rgba(0,229,160,0.08);
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+  }
+
+  .table-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  tbody tr.row-winner td {
+    background: rgba(0,229,160,0.06);
+  }
+
+  tbody tr.row-winner td:first-child {
+    color: var(--success);
+    font-weight: 700;
+  }
+
+  .grid-product {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.1rem;
+  }
+
+  .product-mini {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 0.35rem;
+  }
+
+  .value-pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .value-pillar {
+    border-radius: 16px;
+    padding: 1.35rem;
+    border: 1px solid var(--border);
+    background: linear-gradient(160deg, rgba(43,127,255,0.08), rgba(4,13,31,0.2));
+    transition: transform 0.22s, border-color 0.22s;
+  }
+
+  .value-pillar:hover {
+    transform: translateY(-3px);
+    border-color: rgba(43,127,255,0.45);
+  }
+
+  .value-pillar h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .value-pillar ul {
+    margin-top: 0.5rem;
+  }
+
+  .value-pillar li {
+    font-size: 0.82rem;
+  }
+
+  .uen-grid .card {
+    min-height: 100%;
+  }
+
+  .uen-grid .card h3 {
+    font-size: 1rem;
+  }
+
+  .hero-title .line2 {
+    display: block;
+    font-size: 0.42em;
+    letter-spacing: 0.02em;
+    margin-top: 0.2em;
+    color: rgba(240,244,255,0.72);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SENTINEL ⬡ STRATOS</div>
+  <div class="nav-links">
+    <a href="#overview">Visión</a>
+    <a href="#uen">UEN</a>
+    <a href="#exec">Resumen</a>
+    <a href="#problema">Problema</a>
+    <a href="#solucion">Solución</a>
+    <a href="#producto-tech">Producto</a>
+    <a href="#valor">Valor</a>
+    <a href="#mercado">Mercado</a>
+    <a href="#localizacion">Ubicación</a>
+    <a href="#ingenieria">Proceso</a>
+    <a href="#layout">Planta</a>
+    <a href="#economico">Economía</a>
+    <a href="#conclusion">Cierre</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 1. HERO -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="hero" style="padding-left:2rem;padding-right:2rem;">
+  <div class="hero-badge"><span></span> PROYECTO FINAL · INGENIERÍA INDUSTRIAL · UTN FRSR 2025</div>
+  <h1 class="hero-title">Planta + nube para monitoreo ambiental en serio<br><span class="accent">SENTINEL</span> <span style="-webkit-text-fill-color:var(--white);">STRATOS</span></h1>
+  <p class="hero-lede">Hub regional de ensamble e integración de VANT con despegue vertical: misión ambiental, datos accionables y operación sostenida en el territorio.</p>
+  <p class="hero-tagline">Una sola plataforma física, <strong>configuración por software</strong> y servicios recurrentes. Menos latencia que el satélite, más alcance que el sensor puntual, con respaldo local.</p>
+
+  <div class="hero-kpis-primary">
+    <div class="kpi-card kpi-pill">
+      <div class="kpi-value">VTOL</div>
+      <div class="kpi-label">DESPLIEGUE SIN PISTA</div>
+    </div>
+    <div class="kpi-card kpi-pill">
+      <div class="kpi-value">IA</div>
+      <div class="kpi-label">EDGE + NUBE</div>
+    </div>
+    <div class="kpi-card kpi-pill">
+      <div class="kpi-value">SaaS</div>
+      <div class="kpi-label">SENTINEL CLOUD</div>
+    </div>
+    <div class="kpi-card kpi-pill">
+      <div class="kpi-value">∞</div>
+      <div class="kpi-label">MODELO ESCALABLE</div>
+    </div>
+  </div>
+
+  <div class="hero-kpis-secondary">
+    <div class="kpi-card">
+      <div class="kpi-value">970</div>
+      <div class="kpi-label">DRONES / AÑO</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">USD 25M</div>
+      <div class="kpi-label">VAN ESPERADO (WACC 18%)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">100%</div>
+      <div class="kpi-label">VIABILIDAD (10K ITER.)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">&lt; 3 años</div>
+      <div class="kpi-label">PAYBACK ESTIMADO</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">55 u.</div>
+      <div class="kpi-label">PUNTO DE EQUILIBRIO</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 1b. PROJECT OVERVIEW -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="overview">
+  <div class="sec-label">00 — Project Overview</div>
+  <h2>De kits importados a operación nacional</h2>
+  <p class="lede fade-in">Sentinel plantea una planta de ensamble bajo esquema CKD/SKD que convierte componentes OEM en plataformas listas para misión, con fuerte componente de software y servicios para monitoreo ambiental y productivo.</p>
+  <div class="grid-3 fade-in">
+    <div class="card">
+      <span class="card-icon">🏭</span>
+      <h3>Planta VTOL</h3>
+      <p>Integración de aeronaves pensadas para cobertura amplia y despegue vertical, orientadas a brigadas, utilities y operadores agroindustriales.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🧠</span>
+      <h3>IA + campo</h3>
+      <p>Procesamiento en borde para alertas rápidas y continuidad operativa; la nube concentra flota, históricos y gobierno del dato.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔗</span>
+      <h3>Híbrido hardware / SaaS</h3>
+      <p>El margen no depende solo del chasis: MaaS, MRO, capacitación y licencias convierten el activo en relación de largo plazo con el cliente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 1c. UEN — MODELO DE NEGOCIO -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="uen">
+  <div class="sec-label">00b — Unidades Estratégicas de Negocio</div>
+  <h2>Tres motores, un mismo sistema</h2>
+  <p class="lede fade-in">El estudio estructura el proyecto en UEN complementarias: manufactura como núcleo, servicios como palanca comercial y nube como capa recurrente.</p>
+  <div class="grid-3 uen-grid fade-in">
+    <div class="card">
+      <span class="product-mini">UEN I</span>
+      <h3>Planta industrial</h3>
+      <ul class="mt-1">
+        <li>Ensamble modular y estandarizado</li>
+        <li>Integración de aviónica y sensórica</li>
+        <li>Pruebas, calibración y despacho</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="product-mini">UEN II</span>
+      <h3>Servicios</h3>
+      <ul class="mt-1">
+        <li>MaaS: vuelo, datos y reporte bajo demanda</li>
+        <li>MRO y soporte de ciclo de vida</li>
+        <li>Capacitación de pilotos y técnicos</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="product-mini">UEN III</span>
+      <h3>Sentinel Cloud</h3>
+      <ul class="mt-1">
+        <li>SaaS multivertical y APIs</li>
+        <li>Alertas, tableros y trazabilidad</li>
+        <li>Activación lógica por licencia</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 2. RESUMEN EJECUTIVO -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="exec">
+  <div class="sec-label">01 — Resumen Ejecutivo</div>
+  <h2>El pitch en 5 bloques</h2>
+
+  <div class="grid-3 fade-in">
+    <div class="card">
+      <span class="card-icon">🔥</span>
+      <h3>El Problema</h3>
+      <p>Argentina pierde miles de hectáreas por incendios forestales cada año. Las soluciones actuales —satélites, sensores IoT, drones genéricos— son lentas, costosas o no están integradas con soporte local.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🚁</span>
+      <h3>La Solución</h3>
+      <p>Sentinel integra hardware aeroespacial (drones VTOL) con software inteligente (Sentinel Cloud) para detección temprana de incendios, monitoreo ambiental y gestión agrícola. Un solo activo, múltiples verticales.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">💼</span>
+      <h3>El Modelo</h3>
+      <p>Hardware + SaaS. Venta directa del dron más suscripción recurrente a la plataforma. Reducción de riesgo por doble fuente de ingresos. Módulos activables: FireWatch, Agro-Scan, Livestock.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📊</span>
+      <h3>La Viabilidad</h3>
+      <p>VAN esperado de USD 25,13 M (Escenario Compra) bajo WACC del 18% y 10.000 iteraciones Monte Carlo. Probabilidad de VAN positivo: 100%. Payback en menos de 3 años.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🎯</span>
+      <h3>El Insight Clave</h3>
+      <p>Sentinel no compite en precio de hardware con China. Compite en <strong>solución integral localizada</strong>: soporte técnico en 24h, conocimiento del mercado agroambiental argentino y flexibilidad digital sin precedente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 3. PROBLEMA Y OPORTUNIDAD -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="problema">
+  <div class="sec-label">02 — Problema & Oportunidad</div>
+  <h2>¿Qué está fallando hoy?</h2>
+
+  <div class="two-col fade-in">
+    <div>
+      <div class="highlight-box danger" style="margin-top:0;">
+        <strong style="color:var(--danger);">La brecha de detección</strong>
+        <p style="margin-top:0.5rem;">Los incendios forestales escalan por falta de detección temprana. Argentina no tiene infraestructura tecnológica integrada para respuesta rápida. Las soluciones existentes tienen una o más fallas críticas.</p>
+      </div>
+
+      <h3 class="mt-2">Limitaciones del mercado actual</h3>
+      <div class="risk-grid mt-1">
+        <div class="risk-item alto">
+          <div class="risk-level">Crítico</div>
+          <h4 style="font-size:0.85rem;margin-bottom:0.3rem;">Drones Genéricos (DJI)</h4>
+          <p class="small">Sin soporte local. Reparación en semanas. Sin integración de datos. Usa el mismo hardware para todo.</p>
+        </div>
+        <div class="risk-item medio">
+          <div class="risk-level">Limitado</div>
+          <h4 style="font-size:0.85rem;margin-bottom:0.3rem;">Satélites</h4>
+          <p class="small">Latencia de horas a días. Resolución insuficiente. Alto costo por imagen. No son tiempo real.</p>
+        </div>
+        <div class="risk-item medio">
+          <div class="risk-level">Incompleto</div>
+          <h4 style="font-size:0.85rem;margin-bottom:0.3rem;">Sensores IoT</h4>
+          <p class="small">Cobertura puntual. Infraestructura costosa. No adaptable a zonas remotas. Sin movilidad.</p>
+        </div>
+        <div class="risk-item bajo">
+          <div class="risk-level">Nicho</div>
+          <h4 style="font-size:0.85rem;margin-bottom:0.3rem;">Drones Industriales Importados</h4>
+          <p class="small">Precios prohibitivos. Soporte desde el exterior. Sin localización ni conocimiento del territorio.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3>La Oportunidad Detectada</h3>
+      <p>Existe un nicho regional insatisfecho: organizaciones que necesitan soluciones de monitoreo aéreo con soporte local, precios competitivos y plataforma de datos integrada.</p>
+
+      <div class="card mt-2">
+        <h3>TAM / SOM</h3>
+        <ul>
+          <li>Organismos provinciales de gestión de emergencias</li>
+          <li>Empresas forestales y agroindustriales</li>
+          <li>Aseguradoras con carteras agropecuarias</li>
+          <li>Oil & Gas (monitoreo de ductos y áreas)</li>
+          <li>Municipalidades y ONGs ambientales</li>
+          <li>Sector minero (Mendoza, Neuquén, Salta)</li>
+        </ul>
+        <div class="highlight-box success mt-1" style="margin-bottom:0;">
+          <strong style="color:var(--success);">SOM Objetivo:</strong> 970 unidades/año = 24% del TAM identificado.
+        </div>
+      </div>
+
+      <div class="card mt-1">
+        <h3>El timing es ahora</h3>
+        <p>La urgencia ambiental crea una ventana de entrada única. Argentina necesita soluciones nacionales, y el ecosistema de talento de Mendoza (UTN, UNCuyo, IES) permite construirlas localmente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 4. SOLUCIÓN SENTINEL -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="solucion">
+  <div class="sec-label">03 — La Solución Sentinel</div>
+  <h2>Tres capas, un ecosistema</h2>
+
+  <div class="grid-3 fade-in">
+    <!-- HARDWARE -->
+    <div class="vertical-card" data-glyph="🚁" style="border-top: 3px solid var(--accent);">
+      <div class="sec-label" style="margin-bottom:1rem;">CAPA 1</div>
+      <h3>Hardware — VANT Base Sentinel</h3>
+      <p>Dron VTOL modular ensamblado en Mendoza. Arquitectura de precisión aeroespacial con componentes OEM de primer nivel.</p>
+
+      <ul class="mt-1">
+        <li>4 motores T-Motor + hélices plegables</li>
+        <li>Controladora de vuelo CubePilot</li>
+        <li>2 módulos GPS RTK de alta precisión</li>
+        <li>Radar anticolisión + seguimiento de terreno</li>
+        <li>Chasis de fibra de carbono (Carbon Group)</li>
+        <li>Sensor térmico FLIR integrable</li>
+        <li>Módulo de cómputo NVIDIA embarcado</li>
+        <li>Batería LiPo/Li-Ion 13-14S con BMS</li>
+      </ul>
+
+      <div class="pill-divider" style="margin:1rem 0;">
+        <span>CONFIGURACIONES</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <span class="tag tag-blue">🔥 FireWatch — Climatech</span>
+        <span class="tag tag-green">🌾 Agro-Scan — Agritech</span>
+        <span class="tag tag-orange">🐄 Livestock — Ganadería</span>
+      </div>
+    </div>
+
+    <!-- SOFTWARE -->
+    <div class="vertical-card" data-glyph="☁" style="border-top: 3px solid var(--cyan);">
+      <div class="sec-label" style="margin-bottom:1rem;">CAPA 2</div>
+      <h3>Software — Sentinel Cloud</h3>
+      <p>Plataforma SaaS multivertical con IA embarcada y análisis de datos en tiempo real. Interfaz web + dashboard + alertas automáticas.</p>
+
+      <ul class="mt-1">
+        <li>IA embarcada para detección de focos térmicos</li>
+        <li>Alertas en tiempo real por umbral configurable</li>
+        <li>Dashboard de análisis multiespectral</li>
+        <li>Historial y reportes descargables</li>
+        <li>Integración con sistemas SCADA / ERP</li>
+        <li>API abierta para organismos gubernamentales</li>
+      </ul>
+
+      <div class="pill-divider" style="margin:1rem 0;">
+        <span>PLANES SaaS</span>
+      </div>
+      <p class="small" style="color:var(--muted);">Múltiples tiers con precio mensual en USD según verticales activados. Modelo de facturación recurrente que aporta previsibilidad al flujo de caja.</p>
+    </div>
+
+    <!-- SERVICIOS -->
+    <div class="vertical-card" data-glyph="🛠" style="border-top: 3px solid var(--success);">
+      <div class="sec-label" style="margin-bottom:1rem;">CAPA 3</div>
+      <h3>Servicios — MaaS & Soporte</h3>
+      <p>Modelo as-a-Service para clientes que prefieren no comprar el activo. Soporte técnico localizado, capacitación y mantenimiento.</p>
+
+      <ul class="mt-1">
+        <li>MaaS (Monitoring-as-a-Service): vuelo + datos + reporte</li>
+        <li>Mantenimiento preventivo y correctivo en Mendoza</li>
+        <li>Capacitación de operadores en sitio</li>
+        <li>Soporte técnico con Time-to-Solve &lt; 24h</li>
+        <li>Actualizaciones de firmware y plataforma</li>
+        <li>Repuestos en stock con sistema SIRA activo</li>
+      </ul>
+
+      <div class="highlight-box success mt-1" style="margin-bottom:0;">
+        <strong style="color:var(--success);">Diferenciador crítico:</strong> Soporte local vs. tiempos de reparación internacional de semanas o meses.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 4b. PRODUCTO Y TECNOLOGÍA -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="producto-tech">
+  <div class="sec-label">03b — Producto & Tecnología</div>
+  <h2>Un chasis, dos personalidades comerciales</h2>
+  <p class="lede fade-in">La línea prioriza una plataforma común con sensórica embarcada y diferenciación por firmware + licencias: edición táctica orientada a emergencias y edición enterprise para agricultura y cartografía exigente.</p>
+
+  <div class="grid-2 fade-in mb-2">
+    <div class="card">
+      <span class="product-mini">Hardware</span>
+      <h3>Stratos vs ResQ</h3>
+      <p>Misma base constructiva; cambian perfiles de misión y módulos activos. ResQ prioriza despliegue rápido y lectura térmica; Stratos habilita autonomías extendidas, RTK y cargas analíticas pesadas.</p>
+      <ul class="mt-1">
+        <li>Propulsión y energía dimensionadas para viento y altitud local</li>
+        <li>Aviónica de precisión con RTK disponible según licencia</li>
+        <li>Puerto inferior universal para payloads externos</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="product-mini">Sensores</span>
+      <h3>Cobertura espectral</h3>
+      <p>Suite integrada que combina visión clásica, firma térmica, firmas multiespectrales y, en la edición avanzada, nubes LiDAR para modelado fino del terreno y dosel.</p>
+      <div style="display:flex;gap:0.45rem;flex-wrap:wrap;margin-top:0.75rem;">
+        <span class="tag tag-blue">RGB</span>
+        <span class="tag tag-red">Térmico</span>
+        <span class="tag tag-green">Multiespectral</span>
+        <span class="tag tag-cyan">LiDAR</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-product fade-in">
+    <div class="vertical-card" data-glyph="◈">
+      <span class="product-mini">IA embarcada</span>
+      <h3>Decisiones en vuelo</h3>
+      <p class="small">Inferencia en borde para detección temprana, priorización de alertas y mitigación de falsos positivos cuando el enlace es limitado.</p>
+    </div>
+    <div class="vertical-card" data-glyph="☁">
+      <span class="product-mini">Software</span>
+      <h3>Sentinel Cloud</h3>
+      <p class="small">Orquestación de flota, telemetría, historiales exportables y gobierno de datos para clientes corporativos e institucionales.</p>
+    </div>
+    <div class="vertical-card" data-glyph="📦">
+      <span class="product-mini">Modularidad</span>
+      <h3>Kitting en despacho</h3>
+      <p class="small">Accesorios plug &amp; play (p. ej. pulverización) se suman al embalaje final sin rearmar la línea principal, habilitando upsell sin duplicar inventarios de largo tail.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 5. PROPUESTA DE VALOR -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="valor">
+  <div class="sec-label">04 — Propuesta de Valor</div>
+  <h2>Tres pilares, un contrato claro con el territorio</h2>
+
+  <div class="value-pillars fade-in">
+    <div class="value-pillar">
+      <span class="tag tag-cyan mb-1">Cobertura</span>
+      <h3>VTOL + alcance real</h3>
+      <p class="small">Combinar despegue vertical con autonomías de misión amplias reduce fricción logística y acerca el sensor al evento, sin depender de pistas o despliegues lentos.</p>
+      <ul>
+        <li>Patrullaje y muestreo continuo sobre grandes superficies</li>
+        <li>Menor latencia operativa frente a constelaciones satelitales</li>
+      </ul>
+    </div>
+    <div class="value-pillar">
+      <span class="tag tag-blue mb-1">Datos</span>
+      <h3>Inteligencia accionable</h3>
+      <p class="small">Alertas georreferidas, priorización por criticidad y trazabilidad para equipos de campo, mesas de crisis y tableros ejecutivos.</p>
+      <ul>
+        <li>IA en borde y refinamiento en nube</li>
+        <li>Reportes exportables para auditoría y aseguradoras</li>
+      </ul>
+    </div>
+    <div class="value-pillar">
+      <span class="tag tag-green mb-1">Operación</span>
+      <h3>Soporte local</h3>
+      <p class="small">MRO, repuestos y capacitación en el país, con alineación a marcos regulatorios de aviación civil y continuidad contractual medible.</p>
+      <ul>
+        <li>Tiempos de respuesta compatibles con emergencias</li>
+        <li>Relación directa con organismos y grandes cuentas</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pill-divider fade-in"><span>Diferenciación complementaria</span></div>
+
+  <div class="grid-2 fade-in">
+    <div class="card">
+      <h3>Moat operativo</h3>
+      <ul>
+        <li>Plataforma unificada con módulos activables por vertical</li>
+        <li>Servicio técnico regional vs. reparación offshore</li>
+        <li>Datos propietarios que mejoran modelos con el uso</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Estrategia de go-to-market</h3>
+      <ul>
+        <li>Venta consultiva B2B/B2G de alto ticket</li>
+        <li>MaaS para reducir barrera de entrada</li>
+        <li>Hardware habilitador de suscripción SaaS</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 6. MODELO DE NEGOCIO -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="negocio">
+  <div class="sec-label">05 — Modelo de Negocio</div>
+  <h2>Ingresos recurrentes sobre activos físicos</h2>
+  <p class="lede fade-in">Las UEN se traducen en palancas comerciales: venta de plataforma, servicios de operación y suscripción cloud que estabilizan flujo de caja.</p>
+
+  <div class="grid-4 fade-in">
+    <div class="kpi-card" style="text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🏷️</div>
+      <div class="kpi-value" style="font-size:1.1rem;">Venta directa</div>
+      <div class="kpi-label">Hardware VANT</div>
+      <p class="small mt-1">USD 17.700–35.000 por unidad. Consultiva B2B. Organismos, empresas forestales, petroleras.</p>
+    </div>
+    <div class="kpi-card" style="text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">☁️</div>
+      <div class="kpi-value" style="font-size:1.1rem;">SaaS</div>
+      <div class="kpi-label">Sentinel Cloud</div>
+      <p class="small mt-1">Suscripción mensual en USD. Múltiples tiers por vertical activado. Ingreso recurrente.</p>
+    </div>
+    <div class="kpi-card" style="text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🔄</div>
+      <div class="kpi-value" style="font-size:1.1rem;">MaaS</div>
+      <div class="kpi-label">Monitoring-as-a-Service</div>
+      <p class="small mt-1">El cliente no compra el dron: contrata el servicio de monitoreo. Menor barrera de entrada.</p>
+    </div>
+    <div class="kpi-card" style="text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🤝</div>
+      <div class="kpi-value" style="font-size:1.1rem;">Alianzas</div>
+      <div class="kpi-label">Institucional / B2G</div>
+      <p class="small mt-1">Contratos con organismos provinciales, municipalidades, bomberos, ONGs. Larga duración.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box success mt-2 fade-in">
+    <strong style="color:var(--success);">Resiliencia del modelo dual:</strong> El mix Hardware + SaaS reduce la exposición a la volatilidad de cualquier fuente individual. El módulo SaaS aporta recurrencia y previsibilidad al flujo de caja proyectado.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 7. MERCADO Y COMPETENCIA -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="mercado">
+  <div class="sec-label">06 — Mercado & Competencia</div>
+  <h2>El mapa del tablero</h2>
+
+  <div class="table-wrap fade-in mb-2">
+    <table>
+      <thead>
+        <tr>
+          <th>Competidor</th>
+          <th>Origen</th>
+          <th>Posición</th>
+          <th>Debilidad principal</th>
+          <th>Amenaza para Sentinel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>DJI</strong></td>
+          <td>China</td>
+          <td>Líder mundial masivo</td>
+          <td>Soporte técnico inexistente localmente. Reparaciones en semanas.</td>
+          <td><span class="tag tag-orange">Media</span></td>
+        </tr>
+        <tr>
+          <td><strong>XAG</strong></td>
+          <td>China</td>
+          <td>Unicornio agro (Baidu + SoftBank)</td>
+          <td>Sin presencia local en Argentina. Foco en agro solamente.</td>
+          <td><span class="tag tag-orange">Media</span></td>
+        </tr>
+        <tr>
+          <td><strong>JOUAV</strong></td>
+          <td>Chengdu, China</td>
+          <td>VTOL industrial, aviación militar</td>
+          <td>Nicho muy específico. Precio elevadísimo. Sin soporte local.</td>
+          <td><span class="tag tag-green">Baja</span></td>
+        </tr>
+        <tr>
+          <td><strong>XMobots</strong></td>
+          <td>Brasil</td>
+          <td>Líder regional en agro</td>
+          <td>Alto costo. Baja presencia fuera de Brasil. No diversificado.</td>
+          <td><span class="tag tag-orange">Media</span></td>
+        </tr>
+        <tr>
+          <td><strong>Skydio</strong></td>
+          <td>EE.UU.</td>
+          <td>Enterprise, fuerte en seguimiento autónomo</td>
+          <td>100% concentrado en mercado norteamericano. Sin ops en LATAM.</td>
+          <td><span class="tag tag-green">Baja</span></td>
+        </tr>
+        <tr>
+          <td><strong>Satélites (gen.)</strong></td>
+          <td>Global</td>
+          <td>Cobertura masiva</td>
+          <td>Latencia de horas/días. Sin tiempo real. Caro por imagen.</td>
+          <td><span class="tag tag-green">Baja</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--accent);"><strong>✦ SENTINEL</strong></td>
+          <td>🇦🇷 Mendoza</td>
+          <td>Solución integral regional</td>
+          <td style="color:var(--muted);font-style:italic;">—</td>
+          <td><span class="tag tag-cyan">Posicionamiento único</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box fade-in">
+    <strong>Insight estratégico definitivo:</strong> Sentinel no compite en hardware. Compite en <strong>solución integral</strong>. Ocupa el nicho regional insatisfecho que ningún fabricante asiático puede cubrir con soporte local, conocimiento territorial y plataforma de datos integrada.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 8. LOCALIZACIÓN -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="localizacion">
+  <div class="sec-label">07 — Localización</div>
+  <h2>¿Dónde se fabrica el futuro?</h2>
+  <p class="lede fade-in">Dos decisiones encadenadas: región óptima vía factores ponderados y, dentro de Gran Mendoza, el sitio que mejor equilibra permisos, servicios y adecuación UAV.</p>
+
+  <div class="winner-pill fade-in">Resultado macrolocalización — Gran Mendoza</div>
+  <div class="table-wrap fade-in mb-2">
+    <table>
+      <thead>
+        <tr>
+          <th>Factor (ponderación)</th>
+          <th>Mendoza</th>
+          <th>Buenos Aires</th>
+          <th>Río Negro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Demanda y proximidad a clientes (0,20)</td>
+          <td>8</td>
+          <td>6</td>
+          <td>7</td>
+        </tr>
+        <tr>
+          <td>Espacio aéreo y pruebas (0,15)</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+        </tr>
+        <tr>
+          <td>Ecosistema y talento (0,15)</td>
+          <td>8</td>
+          <td>6</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>Logística y conectividad (0,10)</td>
+          <td>8</td>
+          <td>7</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>Costos operativos (0,10)</td>
+          <td>6</td>
+          <td>7</td>
+          <td>7</td>
+        </tr>
+        <tr>
+          <td>Servicios críticos (0,10)</td>
+          <td>8</td>
+          <td>6</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>Clima para pruebas (0,10)</td>
+          <td>7</td>
+          <td>7</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>Apoyo público / regulatorio (0,05)</td>
+          <td>7</td>
+          <td>6</td>
+          <td>8</td>
+        </tr>
+        <tr>
+          <td>Seguridad y riesgo (0,05)</td>
+          <td>7</td>
+          <td>7</td>
+          <td>7</td>
+        </tr>
+        <tr class="row-winner">
+          <td><strong>Total ponderado (1,00)</strong></td>
+          <td><strong>7,45</strong></td>
+          <td>6,65</td>
+          <td>6,90</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="table-note">Escala 1–10 por factor · método de factores ponderados · fuente: estudio de viabilidad del proyecto.</p>
+  </div>
+
+  <div class="highlight-box success fade-in mb-2">
+    <strong style="color:var(--success);">Lectura ejecutiva:</strong> Mendoza lidera por talento técnico cercano, proveeduría y conectividad hacia corredores productivos; Río Negro aporta ventaja en espacio aéreo pero no compensa el combo operativo; Buenos Aires encarece estructura sin aportar sinergia UAV decisiva.
+  </div>
+
+  <h3 class="fade-in" style="margin-bottom:0.75rem;">Microlocalización — sitio dentro de Gran Mendoza</h3>
+  <div class="winner-pill fade-in">Ganador — Parque industrial (p. ej. Maipú / Luján de Cuyo)</div>
+  <div class="table-wrap fade-in mb-2">
+    <table>
+      <thead>
+        <tr>
+          <th>Alternativa</th>
+          <th>Puntaje ponderado</th>
+          <th>Perfil</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-winner">
+          <td><strong>B · Parque industrial</strong></td>
+          <td><strong>8,20</strong></td>
+          <td>Uso compatible, servicios trifásicos + fibra, naves con altura útil y menor fricción regulatoria.</td>
+        </tr>
+        <tr>
+          <td>A · Hub tipo Cumbrar</td>
+          <td>7,65</td>
+          <td>Excelente servicios corporativos; puede requerir más adecuación industrial dura.</td>
+        </tr>
+        <tr>
+          <td>C · Aeroclub / hangar</td>
+          <td>7,50</td>
+          <td>Proximidad inmediata a pruebas al aire libre; limitaciones edilicias y marcos mixtos.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="table-note">Los parques suman puntos en zonificación, ESD/indoor test y servicios esenciales; el modelo financiero del documento maestro contrasta compra vs. alquiler manteniendo esta lógica de sitio.</p>
+  </div>
+
+  <div class="two-col fade-in">
+    <div class="card">
+      <span class="card-icon">🗺️</span>
+      <h3>Corredores y abastecimiento</h3>
+      <p>Ubicación sobre ejes como RN7 facilita kits importados, proveedores nacionales y salida rápida a valles productivos donde concentra demanda agro y monitoreo ambiental.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏭</span>
+      <h3>Señal para clientes B2B</h3>
+      <p>Parque industrial transmite seriedad, seguridad perimetral y escalabilidad de metros sin reubicar la operación cuando crece la flota ensamblada.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 9. INGENIERÍA DEL PROYECTO -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="ingenieria">
+  <div class="sec-label">08 — Ingeniería del Proyecto</div>
+  <h2>Del kit importado al dron listo para misión</h2>
+  <p class="lede fade-in">Cadena pensada para CKD/SKD: controlar entrada de insumos, estandarizar integración y cerrar con evidencia de calidad antes del despacho.</p>
+
+  <div class="flow-strip fade-in">
+    <div class="flow-item">
+      <div class="flow-n">01</div>
+      <div class="flow-t">Recepción CKD/SKD</div>
+      <div class="flow-d">Inspección, SIRA y trazabilidad de series.</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-n">02</div>
+      <div class="flow-t">Ensamble estructural</div>
+      <div class="flow-d">Chasis, mecánica y ergonomía de línea.</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-n">03</div>
+      <div class="flow-t">Integración</div>
+      <div class="flow-d">Aviónica, propulsión, sensores y edge.</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-n">04</div>
+      <div class="flow-t">Testing funcional</div>
+      <div class="flow-d">Bancos, telemetría y jaula indoor.</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-n">05</div>
+      <div class="flow-t">QA &amp; liberación</div>
+      <div class="flow-d">Protocolos IPC y checklists finales.</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-n">06</div>
+      <div class="flow-t">Despacho</div>
+      <div class="flow-d">Kitting, embalaje y logística outbound.</div>
+    </div>
+  </div>
+
+  <div class="two-col fade-in">
+    <div>
+      <h3 class="mb-1">Detalle operativo</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h4>Recepción y control de insumos</h4>
+            <p>Verificación de componentes importados y nacionales. Sistema SIRA activo. Stock de seguridad 10–20%.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h4>Ensamble y kitting</h4>
+            <p>Montaje estructural bajo IPC/WHMA-A-620 y preparación de kit por unidad con trazabilidad.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h4>Integración electrónica e inteligencia</h4>
+            <p>Motores, ESC, controladora, GPS RTK, cableado IPC-A-610, módulos NVIDIA y sensores.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h4>Testing y QA</h4>
+            <p>Laboratorio ESD + funcional, jaula indoor 39,7 m² y liberación con evidencias.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">05</div>
+          <div class="step-content">
+            <h4>Empaque y despacho</h4>
+            <p>Maletín IP67, espuma CNC, producto Ready-to-Fly y pallets filmados.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card mb-1">
+        <h3>Tecnología de producción</h3>
+        <p>Evaluadas 22 alternativas mediante método de factores ponderados (origen, flexibilidad, seguridad ESD, productividad, automatización, precio, energía, dimensiones).</p>
+        <div class="highlight-box success mt-1">
+          <strong style="color:var(--success);">Seleccionada:</strong> Manufactura de Ensamble de Precisión e Integración Mecatrónica — estándares aeroespaciales.
+        </div>
+      </div>
+      <div class="card mb-1">
+        <h3>Capacidad productiva</h3>
+        <div class="bar-row mt-1">
+          <div class="bar-header"><span>Producción anual</span><span class="text-accent">970 drones</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:97%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-header"><span>Producción mensual</span><span class="text-accent">81 drones</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:81%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-header"><span>Ritmo diario (20 días hábiles)</span><span class="text-accent">4 drones</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:40%"></div></div>
+        </div>
+        <p class="small mt-1">Criterio de dimensionamiento: <strong>punto de equilibrio económico</strong> con margen de crecimiento. Factores: demanda proyectada, capacidad de equipos, RRHH disponible, financiamiento.</p>
+      </div>
+      <div class="card">
+        <h3>Normativa aplicada</h3>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;">
+          <span class="tag tag-blue">IPC-A-610</span>
+          <span class="tag tag-blue">IPC/WHMA-A-620</span>
+          <span class="tag tag-cyan">ANAC UAV</span>
+          <span class="tag tag-green">ISO 9001</span>
+          <span class="tag tag-green">ISO 14001</span>
+          <span class="tag tag-green">ISO 45001</span>
+          <span class="tag tag-orange">Sistema 5S</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 10. LAYOUT Y OPERACIONES -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="layout">
+  <div class="sec-label">09 — Layout & Operaciones</div>
+  <h2>Planta pensada como producto</h2>
+  <p class="lede fade-in">Distribución en U con oficinas elevadas que miran la línea: producción continua, calidad acoplada y stock que alimenta despachos sin cruces innecesarios.</p>
+
+  <div class="grid-3 fade-in mb-2">
+    <div class="card">
+      <span class="product-mini">Core</span>
+      <h3>Producción</h3>
+      <p class="small">Celdas en serie, pasillos seguros y ritmo dimensionado a ~4 unidades diarias con stock de seguridad.</p>
+    </div>
+    <div class="card">
+      <span class="product-mini">Garantía</span>
+      <h3>QA &amp; laboratorio</h3>
+      <p class="small">Estaciones ESD, bancos funcionales y jaula indoor para evidenciar comportamiento antes de liberar.</p>
+    </div>
+    <div class="card">
+      <span class="product-mini">Inventarios</span>
+      <h3>Almacenes MP / PT</h3>
+      <p class="small">Materias primas clasificadas y producto terminado con layout en U para minimizar metros internos.</p>
+    </div>
+    <div class="card">
+      <span class="product-mini">People</span>
+      <h3>Oficinas &amp; IoT/TI</h3>
+      <p class="small">Planta alta con vista a línea, espacios colaborativos y soporte digital continuo a flota en campo.</p>
+    </div>
+    <div class="card">
+      <span class="product-mini">Última milla</span>
+      <h3>Logística</h3>
+      <p class="small">Recepción, showroom, estacionamiento techado y muelle liviano para cargas sensibles.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box fade-in mb-2">
+    <strong>Filosofía de diseño:</strong> Lean Manufacturing — flujo continuo sin retrocesos. Estética "Tech": materiales modernos, iluminación estratégica, espacios diáfanos. Pasillo vidriado en planta alta con vista a línea de producción.
+  </div>
+
+  <div class="table-wrap fade-in mb-2">
+    <table>
+      <thead>
+        <tr>
+          <th>Área</th>
+          <th>Dimensiones</th>
+          <th>Función / Capacidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>🏭 Producción</td>
+          <td>60 m² (10m × 6m)</td>
+          <td>4 puestos en serie, pasillo 2m — 4 drones/día</td>
+        </tr>
+        <tr>
+          <td>🔬 Laboratorio de Calidad</td>
+          <td>26 m²</td>
+          <td>2 puestos: estación ESD + funcional</td>
+        </tr>
+        <tr>
+          <td>✈️ Jaula de vuelo indoor</td>
+          <td>39,7 m² (6,3 × 6,3m)</td>
+          <td>Pruebas funcionales de vuelo post-ensamble</td>
+        </tr>
+        <tr>
+          <td>📦 Almacén MP</td>
+          <td>180 huecos</td>
+          <td>30 módulos × 6 niveles, pasillo 3,5m — stock 20%</td>
+        </tr>
+        <tr>
+          <td>📫 Almacén PT</td>
+          <td>105 drones</td>
+          <td>7 niveles × 5 posiciones, configuración en U</td>
+        </tr>
+        <tr>
+          <td>💻 Planta alta — Oficinas IoT-TI</td>
+          <td>—</td>
+          <td>Administración, cocina/cafetería, balcón con vista a planta</td>
+        </tr>
+        <tr>
+          <td>🚗 Estacionamiento</td>
+          <td>96 m² (16 × 6m)</td>
+          <td>Techado</td>
+        </tr>
+        <tr>
+          <td>🏢 Acceso</td>
+          <td>—</td>
+          <td>Recepción + Showroom + Garita de seguridad CCTV</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-3 fade-in">
+    <div class="card">
+      <h3>Metodología SLP</h3>
+      <p>El layout fue diseñado con la metodología Systematic Layout Planning en 5 etapas:</p>
+      <ol style="list-style:decimal;padding-left:1.2rem;margin-top:0.5rem;">
+        <li style="padding-left:0;">Diagrama de relación de actividades</li>
+        <li style="padding-left:0;">Hoja de trabajo</li>
+        <li style="padding-left:0;">Diagrama adimensional de bloques</li>
+        <li style="padding-left:0;">Determinación de espacios</li>
+        <li style="padding-left:0;">Layout final optimizado</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Equipos de manejo</h3>
+      <ul>
+        <li>Carros de kitting ESD certificados</li>
+        <li>Mesa elevadora hidráulica</li>
+        <li>Transpaletas (capacidad 2.500 kg)</li>
+        <li>Armarios ignífugos Clase 9 (baterías LiPo)</li>
+        <li>Racks metálicos regulables</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Seguridad e Higiene</h3>
+      <ul>
+        <li>Filtros HEPA en estaciones de soldadura</li>
+        <li>Cabinas acústicas para pruebas de motor</li>
+        <li>Área exclusiva baterías con piso ignífugo</li>
+        <li>CCTV + control de acceso por credencial</li>
+        <li>Plan de evacuación e incendios</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 11. CADENA DE SUMINISTRO -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="supply">
+  <div class="sec-label">10 — Cadena de Suministro</div>
+  <h2>Proveedores globales, ensamblaje local</h2>
+
+  <div class="two-col fade-in">
+    <div>
+      <h3 class="mb-1">Proveedores internacionales críticos</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Proveedor</th><th>País</th><th>Componente</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>T-Motor / HOBBYWING</td><td>🇨🇳 China</td><td>Motores y ESCs</td></tr>
+            <tr><td>FLIR / Teledyne</td><td>🇺🇸 EE.UU.</td><td>Sensores térmicos IR (Vue Pro, Hadron)</td></tr>
+            <tr><td>Hex / Holybro / CUAV</td><td>🇨🇳 China</td><td>Flight controllers, GPS RTK C-RTK 9P</td></tr>
+            <tr><td>OKCELL / Grepow</td><td>🇨🇳 China</td><td>Baterías LiPo/Li-Ion con BMS</td></tr>
+            <tr><td>Benewake</td><td>🇨🇳 China</td><td>LiDAR estado sólido TF03</td></tr>
+            <tr><td>XAG</td><td>🇨🇳 China</td><td>Módulos de baterías inteligentes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h3 class="mb-1">Proveedores nacionales</h3>
+      <div class="card mb-1">
+        <strong>Carbon Group S.R.L.</strong> (CABA)<br>
+        <span class="small" style="color:var(--muted);">Fibra de carbono, fibra de vidrio, Kevlar — chasis del dron</span>
+      </div>
+      <div class="card mb-1">
+        <strong>Electrocomponentes S.A.</strong><br>
+        <span class="small" style="color:var(--muted);">Componentes pasivos: resistencias, capacitores, conectores</span>
+      </div>
+
+      <div class="highlight-box warn" style="margin-top:1rem;">
+        <strong style="color:var(--warn);">Riesgo principal:</strong> dependencia de importaciones. Mitigación: stock de seguridad del 10–20% para componentes críticos + sistema SIRA para gestión de importaciones.
+      </div>
+
+      <div class="highlight-box success" style="margin-top:0.75rem;">
+        <strong style="color:var(--success);">Ventaja competitiva:</strong> los mismos proveedores OEM que abastecen a DJI/XAG, pero con ensamblaje, programación y soporte en Mendoza. Calidad global, servicio local.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 12. ESTRATEGIA COMERCIAL -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="comercial">
+  <div class="sec-label">11 — Estrategia Comercial</div>
+  <h2>Go-to-Market</h2>
+
+  <div class="grid-3 fade-in mb-2">
+    <div class="card">
+      <span class="card-icon">🎯</span>
+      <h3>Venta Consultiva Directa</h3>
+      <p>Para organismos provinciales, empresas forestales y petroleras. Alto componente de ingeniería. Proceso de venta largo pero con alto margen y contratos de largo plazo.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">☁️</span>
+      <h3>SaaS + Hardware Enabled</h3>
+      <p>El producto no se vende como dron sino como <strong>Servicio Integral</strong>. El hardware es el enabler de la plataforma digital. Modelo aspiracional para escalar ingresos recurrentes.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏛️</span>
+      <h3>Institucional / B2G</h3>
+      <p>Licitaciones y contratos con organismos públicos: defensa civil, bomberos, secretarías de ambiente. Contratos de largo plazo con ingresos predecibles.</p>
+    </div>
+  </div>
+
+  <div class="two-col fade-in">
+    <div class="card">
+      <h3>Expansión Geográfica</h3>
+      <div class="table-wrap mt-1">
+        <table>
+          <thead><tr><th>Fase</th><th>Período</th><th>Mercados objetivo</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-green">Fase 1</span></td><td>Actual</td><td>Argentina — Mendoza, Patagonia, NOA</td></tr>
+            <tr><td><span class="tag tag-blue">Fase 2</span></td><td>2027–28</td><td>Chile (sur forestal + norte minero), Brasil (Mato Grosso, Paraná), México (Sinaloa, Monterrey)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Mix 4P / 4C</h3>
+      <ul>
+        <li><strong>Producto:</strong> Dron Base modular + Sentinel Cloud multivertical</li>
+        <li><strong>Precio:</strong> value-based (venta directa, leasing, SaaS)</li>
+        <li><strong>Plaza:</strong> directa consultiva, sin intermediarios masivos</li>
+        <li><strong>Promoción:</strong> LinkedIn B2B, Instagram storytelling ambiental</li>
+        <li><strong>Postventa:</strong> soporte local, actualizaciones, capacitación continua</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 13. COSTOS E INVERSIONES -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="costos">
+  <div class="sec-label">12 — Costos & Inversiones</div>
+  <h2>La estructura financiera</h2>
+
+  <div class="grid-2 fade-in">
+    <div class="card">
+      <h3>CAPEX — Inversión inicial</h3>
+      <div class="metric-row">
+        <span class="metric-key">Escenario 1 (Compra Maipú)</span>
+        <span class="metric-val green">USD 800.000</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Escenario 2 (Alquiler Cumbra)</span>
+        <span class="metric-val blue">USD 500.000</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Diferencia (menor inversión inicial)</span>
+        <span class="metric-val" style="color:var(--warn);">−USD 300.000</span>
+      </div>
+      <p class="small mt-1" style="color:var(--muted);">El Escenario 2 libera capital para software, marketing e inventario, pero expone al riesgo de ajuste de cánon locativo.</p>
+    </div>
+    <div class="card">
+      <h3>OPEX — Costos fijos anuales</h3>
+      <div class="metric-row">
+        <span class="metric-key">Mínimo</span>
+        <span class="metric-val">USD 800.000 / año</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Probable (base)</span>
+        <span class="metric-val">USD 850.408 / año</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Máximo</span>
+        <span class="metric-val">USD 950.000 / año</span>
+      </div>
+      <p class="small mt-1" style="color:var(--muted);">Igual en ambos escenarios. Incluye RRHH, servicios, logística, costos administrativos y operaciones digitales.</p>
+    </div>
+    <div class="card">
+      <h3>Parámetros de precio y costo unitario</h3>
+      <div class="metric-row">
+        <span class="metric-key">Precio venta (mín/prob/máx)</span>
+        <span class="metric-val">$17.700 / $30.000 / $35.000</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Costo variable (mín/prob/máx)</span>
+        <span class="metric-val">$13.500 / $14.572 / $17.000</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Margen bruto unitario</span>
+        <span class="metric-val green">USD 15.427,97</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Capacidad e indicadores operativos</h3>
+      <div class="metric-row">
+        <span class="metric-key">Capacidad instalada</span>
+        <span class="metric-val">970 u/año</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Punto de equilibrio</span>
+        <span class="metric-val green">~56 u/año</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Margen de seguridad</span>
+        <span class="metric-val green">94%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-key">Punto eq. como % de capacidad</span>
+        <span class="metric-val green">5,7%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 14. VIABILIDAD ECONÓMICA -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="economico">
+  <div class="sec-label">13 — Viabilidad Económica</div>
+  <h2>Monte Carlo: 10.000 futuros posibles</h2>
+
+  <div class="highlight-box fade-in mb-2">
+    <strong>Metodología:</strong> Simulación Monte Carlo con N = 10.000 iteraciones, distribuciones triangulares para variables estocásticas, WACC del 18% anual, horizonte de 5 períodos. Las variables estocásticas son: precio de venta, demanda y costos variables.
+  </div>
+
+  <div class="grid-4 fade-in mb-2">
+    <div class="kpi-card">
+      <div class="kpi-value">USD 25,13M</div>
+      <div class="kpi-label">VAN ESPERADO (ESC. 1)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">100%</div>
+      <div class="kpi-label">P(VAN &gt; 0)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">2,8–3 a.</div>
+      <div class="kpi-label">PAYBACK</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">42,6%</div>
+      <div class="kpi-label">COEF. VARIACIÓN</div>
+    </div>
+  </div>
+
+  <div class="fade-in mb-2">
+    <h3 class="mb-1">Distribución del VAN — Percentiles clave (Escenario 1)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Percentil</th><th>Valor VAN (USD)</th><th>Interpretación</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="tag tag-red">P10 — Pesimista</span></td><td>$11,51 M</td><td>10% de probabilidad de VAN inferior a este valor</td></tr>
+          <tr><td><span class="tag tag-orange">P25 — Bajo</span></td><td>$17,1 M</td><td>25% de probabilidad de VAN inferior a este valor</td></tr>
+          <tr><td><span class="tag tag-blue">P50 — Mediana</span></td><td>$24,42 M</td><td>Valor central de la distribución</td></tr>
+          <tr><td><span class="tag tag-green">P75 — Alto</span></td><td>$32,33 M</td><td>75% de probabilidad de VAN inferior a este valor</td></tr>
+          <tr><td><span class="tag tag-cyan">P90 — Optimista</span></td><td>$39,79 M</td><td>10% de probabilidad de VAN superior a este valor</td></tr>
+          <tr><td style="color:var(--accent);"><strong>Media</strong></td><td><strong>$25,13 M</strong></td><td>Valor esperado de la simulación</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="fade-in">
+    <h3 class="mb-1">Análisis de Sensibilidad — Tornado Chart (Escenario 1)</h3>
+    <div class="tornado">
+      <div class="tornado-row">
+        <div class="tornado-label">Demanda</div>
+        <div class="tornado-bar-wrap">
+          <div class="tornado-bar tornado-pos" style="width:74%;">r = +0,7424</div>
+        </div>
+      </div>
+      <div class="tornado-row">
+        <div class="tornado-label">Precio de venta</div>
+        <div class="tornado-bar-wrap">
+          <div class="tornado-bar tornado-pos" style="width:63%;">r = +0,6278</div>
+        </div>
+      </div>
+      <div class="tornado-row">
+        <div class="tornado-label">Costos variables</div>
+        <div class="tornado-bar-wrap">
+          <div class="tornado-bar tornado-neg" style="width:17%;">r = −0,1700</div>
+        </div>
+      </div>
+      <div class="tornado-row">
+        <div class="tornado-label">Costos fijos</div>
+        <div class="tornado-bar-wrap">
+          <div class="tornado-bar tornado-neg" style="width:2%;">r = −0,0182</div>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-box success mt-1">
+      <strong style="color:var(--success);">Implicancia estratégica:</strong> La variable más crítica es la <strong>demanda</strong>, seguida del precio. Los costos fijos son prácticamente irrelevantes. Esto confirma que la estrategia comercial (penetración, contratos, expansión geográfica) es el principal motor de creación de valor.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 15. ESCENARIOS -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="escenarios">
+  <div class="sec-label">14 — Comparativa de Escenarios</div>
+  <h2>Comprar vs. Alquilar</h2>
+
+  <div class="scenario-grid fade-in">
+    <div class="scenario-card winner-risk">
+      <div class="scenario-title">
+        <span class="tag tag-blue">ESC. 1</span> Compra — Parque Industrial Maipú
+      </div>
+      <div class="metric-row"><span class="metric-key">Inversión inicial</span><span class="metric-val">USD 800.000</span></div>
+      <div class="metric-row"><span class="metric-key">VAN medio (Monte Carlo)</span><span class="metric-val blue">USD 25,13 M</span></div>
+      <div class="metric-row"><span class="metric-key">VAN mediana</span><span class="metric-val">USD 24,42 M</span></div>
+      <div class="metric-row"><span class="metric-key">Desv. estándar</span><span class="metric-val">USD 10,7 M</span></div>
+      <div class="metric-row"><span class="metric-key">Coef. variación</span><span class="metric-val">42,6%</span></div>
+      <div class="metric-row"><span class="metric-key">P(VAN &gt; 0)</span><span class="metric-val green">100,0%</span></div>
+      <div class="metric-row"><span class="metric-key">VAN mínimo</span><span class="metric-val green">USD 0,11 M ✓</span></div>
+      <div class="metric-row"><span class="metric-key">VAN máximo</span><span class="metric-val">USD 62,14 M</span></div>
+      <div class="metric-row"><span class="metric-key">Payback</span><span class="metric-val">2,8 – 3 años</span></div>
+      <div class="metric-row"><span class="metric-key">Variable más influyente</span><span class="metric-val">Demanda (r=0,74)</span></div>
+      <div class="highlight-box" style="margin-top:1rem;margin-bottom:0;">
+        <strong>Perfil:</strong> Menor retorno esperado, <strong>mayor certeza</strong>. VAN mínimo positivo en 100% de iteraciones. Genera activo patrimonial inmobiliario. Ideal si se prioriza seguridad.
+      </div>
+    </div>
+
+    <div class="scenario-card winner">
+      <div class="scenario-title">
+        <span class="tag tag-green">ESC. 2</span> Alquiler — Cumbra ⭐ Mayor retorno
+      </div>
+      <div class="metric-row"><span class="metric-key">Inversión inicial</span><span class="metric-val green">USD 500.000</span></div>
+      <div class="metric-row"><span class="metric-key">VAN determinístico base</span><span class="metric-val green">USD 43,64 M</span></div>
+      <div class="metric-row"><span class="metric-key">VAN medio (Monte Carlo)</span><span class="metric-val green">USD 32,44 M</span></div>
+      <div class="metric-row"><span class="metric-key">VAN mediana</span><span class="metric-val">USD 31,33 M</span></div>
+      <div class="metric-row"><span class="metric-key">Desv. estándar</span><span class="metric-val">USD 14,72 M</span></div>
+      <div class="metric-row"><span class="metric-key">Coef. variación</span><span class="metric-val">45,4%</span></div>
+      <div class="metric-row"><span class="metric-key">P(VAN &gt; 0)</span><span class="metric-val green">~100%</span></div>
+      <div class="metric-row"><span class="metric-key">VAN mínimo</span><span class="metric-val" style="color:var(--warn);">−USD 0,85 M ⚠</span></div>
+      <div class="metric-row"><span class="metric-key">VAN máximo</span><span class="metric-val green">USD 85,34 M</span></div>
+      <div class="metric-row"><span class="metric-key">Variable más influyente</span><span class="metric-val">Precio (r=0,72)</span></div>
+      <div class="highlight-box success" style="margin-top:1rem;margin-bottom:0;">
+        <strong style="color:var(--success);">Perfil:</strong> Mayor retorno esperado (+29% vs. Esc. 1), <strong>mayor dispersión</strong>. Libera capital para software y marketing. VAN mínimo marginalmente negativo en escenario extremo.
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box mt-2 fade-in">
+    <strong>Punto de equilibrio (ambos escenarios):</strong> ~55–56 unidades/año sobre una capacidad instalada de 970. Eso es solo el <strong>5,7% de la capacidad</strong>. Margen de seguridad del 94%. El proyecto genera valor desde volúmenes de producción muy bajos.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 16. RIESGOS -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="riesgos">
+  <div class="sec-label">15 — Gestión de Riesgos</div>
+  <h2>Lo que puede salir mal (y cómo se mitiga)</h2>
+
+  <div class="risk-grid fade-in">
+    <div class="risk-item alto">
+      <div class="risk-level">🔴 Riesgo Alto</div>
+      <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Demanda</h3>
+      <p class="small">Variable de mayor impacto (r=0,74). Caída de ventas afecta directamente el VAN.<br><br><strong>Mitigación:</strong> contratos de largo plazo, MaaS como modelo alternativo, expansión geográfica acelerada, diversificación por verticales (incendios → agro → ganadería).</p>
+    </div>
+    <div class="risk-item medio">
+      <div class="risk-level">🟡 Riesgo Medio</div>
+      <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Precio de venta</h3>
+      <p class="small">Segunda variable crítica (r=0,63–0,72). Presión competitiva de precios asiáticos.<br><br><strong>Mitigación:</strong> estrategia value-based, diferenciación por soporte y plataforma, no competir en precio commodity.</p>
+    </div>
+    <div class="risk-item medio">
+      <div class="risk-level">🟡 Riesgo Medio</div>
+      <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Importaciones</h3>
+      <p class="small">Dependencia de componentes chinos y americanos. Lead times largos.<br><br><strong>Mitigación:</strong> stock de seguridad 10–20%, sistema SIRA activo, múltiples proveedores por componente crítico.</p>
+    </div>
+    <div class="risk-item medio">
+      <div class="risk-level">🟡 Riesgo Medio</div>
+      <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Regulación ANAC</h3>
+      <p class="small">Marco regulatorio de UAV en evolución en Argentina. Cambios pueden afectar operaciones.<br><br><strong>Mitigación:</strong> registro como fabricante nacional, participación activa en cámaras del sector, cumplimiento normativo proactivo.</p>
+    </div>
+    <div class="risk-item bajo">
+      <div class="risk-level">🟢 Riesgo Bajo</div>
+      <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Costos variables</h3>
+      <p class="small">Impacto moderado (r=−0,17) según Monte Carlo. Controlables con compras consolidadas.<br><br><strong>Mitigación:</strong> contratos anuales con proveedores, economías de escala a medida que crece el volumen.</p>
+    </div>
+    <div class="risk-item bajo">
+      <div class="risk-level">🟢 Riesgo Bajo</div>
+      <h3 style="font-size:0.9rem;margin-bottom:0.4rem;">Costos fijos</h3>
+      <p class="small">Impacto prácticamente despreciable (r=−0,018) según el análisis. Punto de equilibrio ultra-bajo.<br><br><strong>Mitigación:</strong> con solo 56 u/año el proyecto es rentable. Estructura lean desde el inicio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 17. CONCLUSIÓN FINAL -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="conclusion">
+  <div class="sec-label">16 — Conclusión Final</div>
+  <h2>El veredicto</h2>
+
+  <div class="conclusion-box fade-in">
+    <div class="conclusion-verdict">SENTINEL ES VIABLE</div>
+    <p style="font-size:1rem;color:rgba(240,244,255,0.85);max-width:720px;margin:0 auto 1.25rem;position:relative;">
+      El ensamble nacional bajo CKD/SKD es <strong>técnicamente consistente</strong> con la cadena de suministro disponible; el posicionamiento hardware + SaaS es <strong>económicamente defendible</strong> frente a importadores puramente commodity; y el perfil Monte Carlo exhibe <strong>robustez financiera</strong> a tasa exigente.
+    </p>
+    <p style="font-size:0.95rem;color:rgba(240,244,255,0.78);max-width:720px;margin:0 auto 2rem;position:relative;">
+      Ambos escenarios presentan <strong>P(VAN &gt; 0) = 100%</strong> o cercano al 100%, con VAN esperados de <strong>USD 25,13 M y USD 32,44 M</strong> respectivamente, a WACC del 18% anual. La escalabilidad llega por servicios y licencias; la diferenciación, por IA y nube operativa.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;max-width:800px;margin:0 auto;position:relative;">
+      <div class="kpi-card">
+        <div class="kpi-value">USD 25M+</div>
+        <div class="kpi-label">VAN ESPERADO MIN.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">100%</div>
+        <div class="kpi-label">VIABILIDAD ESTOCÁSTICA</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">94%</div>
+        <div class="kpi-label">MARGEN DE SEGURIDAD</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">&lt;3 años</div>
+        <div class="kpi-label">RECUPERO DE INVERSIÓN</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3 fade-in mt-2">
+    <div class="card">
+      <span class="card-icon">✅</span>
+      <h3>Viabilidad integral</h3>
+      <p>El proyecto es prefactible en dimensiones técnica, económica y financiera: demanda acotada supera ampliamente el punto de equilibrio y el margen de seguridad operativo es elevado.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🚀</span>
+      <h3>Escalabilidad SaaS</h3>
+      <p>Sentinel Cloud y MaaS permiten crecer ingresos sin duplicar planta al ritmo del hardware; el dron habilita datos y relaciones de largo plazo.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🌍</span>
+      <h3>Diferenciación IA</h3>
+      <p>La propuesta se desplaza de commodity electrónico a plataforma de inteligencia ambiental con presencia regional, lista para replicar modelo en mercados vecinos.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box success mt-2 fade-in" style="text-align:center;padding:2rem;">
+    <p style="font-size:1rem;color:var(--white);margin:0;">
+      <strong style="font-family:'Syne',sans-serif;font-size:1.1rem;">El Proyecto Sentinel STRATOS se muestra PREFACTIBLE desde la perspectiva económico-financiera en ambos escenarios evaluados.</strong><br>
+      <span style="color:var(--muted);font-size:0.85rem;display:block;margin-top:0.5rem;">— Conclusión oficial del Estudio Económico, Capítulo 17 —</span>
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  SENTINEL STRATOS · ESTUDIO DE PRE-FACTIBILIDAD TÉCNICO-ECONÓMICA · UTN FRSR 2025<br>
+  Riquero Franco · Silva Lautaro · Toledano Martin · Sosa Maria Iveth · Ingeniería Industrial
+</footer>
+
+<script>
+  // Intersection Observer para fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Nav active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
